@@ -52,7 +52,7 @@ A 29-session course for undergraduate Biomedical Engineering students: from the 
 
 - Description of the group project, timeline, 100-point evaluation, and suggested course grade weights: [project/project-brief_en.md](project/project-brief_en.md)
 - The project topic is announced in Session 1 and groups are formed in Session 5; final presentations take place in Session 29.
-- Teaching code for each session is placed in the [`code/`](code/README.md) folder; the full code map is in `code/README_en.md`.
+- Teaching code for each session is placed in the [`code/`](code) folder; the full code map is in `code/README.md`.
 
 ## 60/90-Minute Timing Guide
 
