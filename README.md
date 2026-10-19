@@ -8,8 +8,8 @@
 
 | مسیر | محتوا |
 |--:|--:|
-| `session_01_*.md` تا `session_29_*.md` | فایل جلسات (محتوای درس + راهنمای مدرس) |
-| `code/` | کدهای آموزشی اجراشدنی؛ راهنما: `code/README.md`، وابستگی‌ها: `code/requirements.txt` |
+| `session_01_*.md` تا `session_29_*.md` | فایل جلسات (محتوای درس + تکالیف) |
+| `code/` | کدهای آموزشی؛ راهنما: `code/README.md`، وابستگی‌ها: `code/requirements.txt` |
 | `project/project-brief.md` | سند پیشنهادی پروژه گروهی + ارزیابی + وزن نمره |
 | `code/python_selfstudy.ipynb` | نوت‌بوک خودآموز پایتون (تکلیف آمادگی جلسه ۴) |
 

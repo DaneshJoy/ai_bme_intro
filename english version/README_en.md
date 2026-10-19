@@ -6,7 +6,7 @@ A 29-session course for undergraduate Biomedical Engineering students: from the 
 
 | Path | Contents |
 |:--|:--|
-| `session_01_*.md` to `session_29_*.md` | Session files (course content + instructor guide) |
+| `session_01_*.md` to `session_29_*.md` | Session files (course content + homeworks) |
 | `code/` | Runnable teaching code; guide: `code/README.md`, dependencies: `code/requirements.txt` |
 | `project/project-brief_en.md` | Group project proposal + evaluation + grade weights |
 | `code/python_selfstudy_en.ipynb` | Python self-study notebook (preparation assignment for Session 4) |
