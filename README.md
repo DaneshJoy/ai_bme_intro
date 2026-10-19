@@ -11,8 +11,6 @@
 | `session_01_*.md` تا `session_29_*.md` | فایل جلسات (محتوای درس + راهنمای مدرس) |
 | `code/` | کدهای آموزشی اجراشدنی؛ راهنما: `code/README.md`، وابستگی‌ها: `code/requirements.txt` |
 | `project/project-brief.md` | سند پیشنهادی پروژه گروهی + ارزیابی + وزن نمره |
-| `course_sessions.csv` | فهرست ۲۹ جلسه درس |
-| `references.csv` | فهرست ۱۱ منبع درس |
 | `code/python_selfstudy.ipynb` | نوت‌بوک خودآموز پایتون (تکلیف آمادگی جلسه ۴) |
 
 </div>
