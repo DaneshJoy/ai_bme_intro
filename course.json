@@ -1,0 +1,253 @@
+{
+  "id": "ai-bme-intro",
+  "title": "\u0645\u0642\u062f\u0645\u0647\u200c\u0627\u06cc \u0628\u0631 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0648 \u06a9\u0627\u0631\u0628\u0631\u062f \u0622\u0646 \u062f\u0631 \u0645\u0647\u0646\u062f\u0633\u06cc \u067e\u0632\u0634\u06a9\u06cc",
+  "description": "\u062f\u0648\u0631\u0647\u200c\u0627\u06cc \u062c\u0627\u0645\u0639 \u0628\u0631\u0627\u06cc \u0622\u0634\u0646\u0627\u06cc\u06cc \u0628\u0627 \u0645\u0641\u0627\u0647\u06cc\u0645 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0648 \u06a9\u0627\u0631\u0628\u0631\u062f\u0647\u0627\u06cc \u0622\u0646 \u062f\u0631 \u0645\u0647\u0646\u062f\u0633\u06cc \u067e\u0632\u0634\u06a9\u06cc.",
+  "language": "fa",
+  "dir": "rtl",
+  "level": "\u06a9\u0627\u0631\u0634\u0646\u0627\u0633\u06cc \u0627\u0631\u0634\u062f",
+  "category": "\u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0648 \u0645\u0647\u0646\u062f\u0633\u06cc \u067e\u0632\u0634\u06a9\u06cc",
+  "tags": [
+    "\u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc",
+    "\u0645\u0647\u0646\u062f\u0633\u06cc \u067e\u0632\u0634\u06a9\u06cc",
+    "\u06cc\u0627\u062f\u06af\u06cc\u0631\u06cc \u0645\u0627\u0634\u06cc\u0646",
+    "\u067e\u0632\u0634\u06a9\u06cc \u062f\u06cc\u062c\u06cc\u062a\u0627\u0644"
+  ],
+  "lectures": [
+    {
+      "id": "session-01-intro-to-ai",
+      "title": "\u062c\u0644\u0633\u0647 \u06f1: \u0645\u0639\u0631\u0641\u06cc \u062f\u0631\u0633 \u0648 \u0622\u0634\u0646\u0627\u06cc\u06cc \u0628\u0627 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc",
+      "order": 1,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-02-agents-and-llm",
+      "title": "\u062c\u0644\u0633\u0647 \u06f2: \u0639\u0627\u0645\u0644\u200c\u0647\u0627\u06cc \u0647\u0648\u0634\u0645\u0646\u062f \u0648 \u0645\u062d\u06cc\u0637\u061b \u0622\u0634\u0646\u0627\u06cc\u06cc \u0645\u0642\u062f\u0645\u0627\u062a\u06cc \u0628\u0627 LLM",
+      "order": 2,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-03-health-data-and-genai",
+      "title": "\u062c\u0644\u0633\u0647 \u06f3: \u062f\u0627\u062f\u0647\u200c\u0647\u0627\u06cc \u0632\u06cc\u0633\u062a\u06cc \u0648 \u0633\u0644\u0627\u0645\u062a\u061b Big Data \u0648 Generative AI",
+      "order": 3,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-04-python-workshop",
+      "title": "\u062c\u0644\u0633\u0647 \u06f4: \u06a9\u0627\u0631\u06af\u0627\u0647 \u0645\u0642\u062f\u0645\u0627\u062a\u06cc \u067e\u0627\u06cc\u062a\u0648\u0646 \u0648 \u062f\u0627\u062f\u0647",
+      "order": 4,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-05-search-bfs-dfs",
+      "title": "\u062c\u0644\u0633\u0647 \u06f5: \u0635\u0648\u0631\u062a\u200c\u0628\u0646\u062f\u06cc \u0645\u0633\u0626\u0644\u0647 \u062c\u0633\u062a\u200c\u0648\u062c\u0648\u061b BFS \u0648 DFS",
+      "order": 5,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-06-uninformed-search-ucs-ids",
+      "title": "\u062c\u0644\u0633\u0647 \u06f6: \u0631\u0648\u0634\u200c\u0647\u0627\u06cc \u062f\u06cc\u06af\u0631 \u062c\u0633\u062a\u200c\u0648\u062c\u0648\u06cc \u0646\u0627\u0622\u06af\u0627\u0647\u0627\u0646\u0647\u061b Iterative Deepening \u0648 UCS",
+      "order": 6,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-07-informed-heuristics",
+      "title": "\u062c\u0644\u0633\u0647 \u06f7: \u062c\u0633\u062a\u200c\u0648\u062c\u0648\u06cc \u0622\u06af\u0627\u0647\u0627\u0646\u0647 \u0648 \u062a\u0648\u0627\u0628\u0639 \u0627\u0628\u062a\u06a9\u0627\u0631\u06cc",
+      "order": 7,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-08-a-star",
+      "title": "\u062c\u0644\u0633\u0647 \u06f8: \u0627\u0644\u06af\u0648\u0631\u06cc\u062a\u0645 A*",
+      "order": 8,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-09-search-workshop",
+      "title": "\u062c\u0644\u0633\u0647 \u06f9: \u06a9\u0627\u0631\u06af\u0627\u0647 \u067e\u06cc\u0627\u062f\u0647\u200c\u0633\u0627\u0632\u06cc \u0627\u0644\u06af\u0648\u0631\u06cc\u062a\u0645\u200c\u0647\u0627\u06cc \u062c\u0633\u062a\u200c\u0648\u062c\u0648",
+      "order": 9,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-10-local-search-genetic",
+      "title": "\u062c\u0644\u0633\u0647 \u06f1\u06f0: \u062c\u0633\u062a\u200c\u0648\u062c\u0648\u06cc \u0645\u062d\u0644\u06cc \u0648 \u0627\u0644\u06af\u0648\u0631\u06cc\u062a\u0645 \u0698\u0646\u062a\u06cc\u06a9",
+      "order": 10,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-11-continuous-gradient-descent",
+      "title": "\u062c\u0644\u0633\u0647 \u06f1\u06f1: \u062c\u0633\u062a\u200c\u0648\u062c\u0648 \u062f\u0631 \u0641\u0636\u0627\u06cc \u067e\u06cc\u0648\u0633\u062a\u0647 \u0648 \u06af\u0631\u0627\u062f\u06cc\u0627\u0646 \u06a9\u0627\u0647\u0634\u06cc",
+      "order": 11,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-12-csp",
+      "title": "\u062c\u0644\u0633\u0647 \u06f1\u06f2: \u0645\u0633\u0627\u0626\u0644 \u0627\u0631\u0636\u0627\u06cc \u0645\u062d\u062f\u0648\u062f\u06cc\u062a (CSP)",
+      "order": 12,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-13-csp-scheduling",
+      "title": "\u062c\u0644\u0633\u0647 \u06f1\u06f3: \u062d\u0644 CSP \u0648 \u0645\u0633\u0626\u0644\u0647 \u0632\u0645\u0627\u0646\u200c\u0628\u0646\u062f\u06cc",
+      "order": 13,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-14-problem-solving-1",
+      "title": "\u062c\u0644\u0633\u0647 \u06f1\u06f4: \u062c\u0644\u0633\u0647 \u062d\u0644 \u062a\u0645\u0631\u06cc\u0646 \u06f1: \u062c\u0633\u062a\u200c\u0648\u062c\u0648\u060c A*\u060c \u0628\u0647\u06cc\u0646\u0647\u200c\u0633\u0627\u0632\u06cc \u0648 CSP",
+      "order": 14,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-15-adversarial-minimax",
+      "title": "\u062c\u0644\u0633\u0647 \u06f1\u06f5: \u062c\u0633\u062a\u200c\u0648\u062c\u0648\u06cc \u0645\u0642\u0627\u0628\u0644\u0647\u200c\u0627\u06cc\u061b Minimax \u0648 \u0647\u0631\u0633 \u0622\u0644\u0641\u0627\u2013\u0628\u062a\u0627",
+      "order": 15,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-16-midterm-1",
+      "title": "\u062c\u0644\u0633\u0647 \u06f1\u06f6: \u0645\u06cc\u0627\u0646\u200c\u062a\u0631\u0645 \u0627\u0648\u0644 (\u067e\u0648\u0634\u0634 \u062c\u0644\u0633\u0627\u062a \u06f1 \u062a\u0627 \u06f1\u06f5)",
+      "order": 16,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-17-logic-expert-systems",
+      "title": "\u062c\u0644\u0633\u0647 \u06f1\u06f7: \u0645\u0646\u0637\u0642 \u06af\u0632\u0627\u0631\u0647\u200c\u0627\u06cc \u0648 \u0645\u0631\u062a\u0628\u0647 \u0627\u0648\u0644\u061b \u0633\u06cc\u0633\u062a\u0645\u200c\u0647\u0627\u06cc \u062e\u0628\u0631\u0647",
+      "order": 17,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-18-mdp",
+      "title": "\u062c\u0644\u0633\u0647 \u06f1\u06f8: \u0641\u0631\u0627\u06cc\u0646\u062f \u062a\u0635\u0645\u06cc\u0645 \u0645\u0627\u0631\u06a9\u0648\u0641 (MDP)",
+      "order": 18,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-19-reinforcement-learning",
+      "title": "\u062c\u0644\u0633\u0647 \u06f1\u06f9: \u06cc\u0627\u062f\u06af\u06cc\u0631\u06cc \u062a\u0642\u0648\u06cc\u062a\u06cc \u0648 Q-learning",
+      "order": 19,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-20-bayesian-markov",
+      "title": "\u062c\u0644\u0633\u0647 \u06f2\u06f0: \u0634\u0628\u06a9\u0647\u200c\u0647\u0627\u06cc \u0628\u06cc\u0632\u06cc\u0646 \u0648 \u0645\u062f\u0644\u200c\u0647\u0627\u06cc \u0645\u0627\u0631\u06a9\u0648\u0641",
+      "order": 20,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-21-ml-basics-evaluation",
+      "title": "\u062c\u0644\u0633\u0647 \u06f2\u06f1: \u0645\u0628\u0627\u0646\u06cc \u06cc\u0627\u062f\u06af\u06cc\u0631\u06cc \u0645\u0627\u0634\u06cc\u0646 \u0648 \u0627\u0631\u0632\u06cc\u0627\u0628\u06cc \u0645\u062f\u0644",
+      "order": 21,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-22-sklearn-workshop",
+      "title": "\u062c\u0644\u0633\u0647 \u06f2\u06f2: \u06a9\u0627\u0631\u06af\u0627\u0647 \u06cc\u0627\u062f\u06af\u06cc\u0631\u06cc \u0645\u0627\u0634\u06cc\u0646 \u0628\u0627 scikit-learn",
+      "order": 22,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-23-problem-solving-2",
+      "title": "\u062c\u0644\u0633\u0647 \u06f2\u06f3: \u062c\u0644\u0633\u0647 \u062d\u0644 \u062a\u0645\u0631\u06cc\u0646 \u06f2: \u0645\u0646\u0637\u0642\u060c MDP\u060c \u0645\u062f\u0644\u200c\u0647\u0627\u06cc \u0627\u062d\u062a\u0645\u0627\u0644\u0627\u062a\u06cc \u0648 \u06cc\u0627\u062f\u06af\u06cc\u0631\u06cc \u0645\u0627\u0634\u06cc\u0646",
+      "order": 23,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-24-neural-networks-deep-learning",
+      "title": "\u062c\u0644\u0633\u0647 \u06f2\u06f4: \u0634\u0628\u06a9\u0647\u200c\u0647\u0627\u06cc \u0639\u0635\u0628\u06cc \u0648 \u06cc\u0627\u062f\u06af\u06cc\u0631\u06cc \u0639\u0645\u06cc\u0642",
+      "order": 24,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-25-ai-biosignals-bci",
+      "title": "\u062c\u0644\u0633\u0647 \u06f2\u06f5: \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u062f\u0631 \u0633\u06cc\u06af\u0646\u0627\u0644\u200c\u0647\u0627\u06cc \u0632\u06cc\u0633\u062a\u06cc \u0648 BCI",
+      "order": 25,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-26-ai-medical-imaging",
+      "title": "\u062c\u0644\u0633\u0647 \u06f2\u06f6: \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u062f\u0631 \u062a\u0635\u0627\u0648\u06cc\u0631 \u067e\u0632\u0634\u06a9\u06cc",
+      "order": 26,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-27-ai-bme-ethics-validation",
+      "title": "\u062c\u0644\u0633\u0647 \u06f2\u06f7: \u0633\u0627\u06cc\u0631 \u06a9\u0627\u0631\u0628\u0631\u062f\u0647\u0627\u06cc AI \u062f\u0631 \u0645\u0647\u0646\u062f\u0633\u06cc \u067e\u0632\u0634\u06a9\u06cc\u061b \u0627\u062e\u0644\u0627\u0642 \u0648 \u0627\u0639\u062a\u0628\u0627\u0631\u0633\u0646\u062c\u06cc",
+      "order": 27,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-28-midterm-2",
+      "title": "\u062c\u0644\u0633\u0647 \u06f2\u06f8: \u0645\u06cc\u0627\u0646\u200c\u062a\u0631\u0645 \u062f\u0648\u0645 / \u0627\u0631\u0632\u06cc\u0627\u0628\u06cc \u0645\u06cc\u0627\u0646\u200c\u062f\u0648\u0631\u0647\u200c\u0627\u06cc \u062f\u0648\u0645 (\u067e\u0648\u0634\u0634 \u062c\u0644\u0633\u0627\u062a \u06f1\u06f7 \u062a\u0627 \u06f2\u06f6)",
+      "order": 28,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    },
+    {
+      "id": "session-29-future-of-ai-medicine",
+      "title": "\u062c\u0644\u0633\u0647 \u06f2\u06f9: \u0622\u06cc\u0646\u062f\u0647 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u062f\u0631 \u067e\u0632\u0634\u06a9\u06cc \u0648 \u0627\u0631\u0627\u0626\u0647 \u067e\u0631\u0648\u0698\u0647\u200c\u0647\u0627",
+      "order": 29,
+      "durationMinutes": 0,
+      "objectives": [],
+      "status": "published"
+    }
+  ],
+  "schemaVersion": "1.0.0",
+  "templateVersion": "1.0.0",
+  "license": "CC-BY-4.0",
+  "updatedAt": "2026-10-29"
+}

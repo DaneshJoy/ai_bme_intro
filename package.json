@@ -1,0 +1,18 @@
+{
+  "name": "ai-bme-intro",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "validate": "node scripts/build-content.mjs --validate && node scripts/validate-manifest.mjs course.json",
+    "build": "npm run validate && node scripts/build-content.mjs && vite build",
+    "test": "node --test",
+    "check": "npm run validate && npm run build && npm test"
+  },
+  "devDependencies": {
+    "ajv": "^8.20.0",
+    "typescript": "~5.9.3",
+    "vite": "~7.1.12"
+  }
+}
