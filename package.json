@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "validate": "node scripts/build-content.mjs --validate && node scripts/validate-manifest.mjs course.json",
-    "build": "npm run validate && node scripts/build-content.mjs && vite build",
+    "build": "npm run validate && node scripts/build-content.mjs && vite build && cp course.json dist/course.json",
     "test": "node --test",
     "check": "npm run validate && npm run build && npm test"
   },
