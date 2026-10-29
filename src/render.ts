@@ -13,6 +13,7 @@ export const markdown = (source: string) => {
     const line = lines[i];
     const fence = line.match(/^```([^`]*)$/);
     if (fence) { const body: string[] = []; i++; while (i < lines.length && !/^```\s*$/.test(lines[i])) body.push(lines[i++]); i++; out.push(`<pre dir="ltr"><code>${escape(body.join('\n'))}</code></pre>`); continue; }
+    if (/^(-{3,}|\*{3,})\s*$/.test(line)) { out.push('<hr>'); i++; continue; }
     const heading = line.match(/^(#{1,6})\s+(.+)$/);
     if (heading) { const n = heading[1].length; out.push(`<h${n}>${inline(heading[2])}</h${n}>`); i++; continue; }
     if (/^\s*\|.*\|\s*$/.test(line) && i + 1 < lines.length && /^\s*\|?\s*:?-{3,}/.test(lines[i + 1])) {
@@ -57,7 +58,7 @@ export const markdown = (source: string) => {
 };
 
 export function renderCodeIndex(codes: { supplemental?: boolean; session?: number; githubUrl: string; name: string }[], base: string) {
-  return `<header><a href="${base}">خانه</a><a href="${base}code/">فهرست کدها</a><button id="theme" type="button" aria-label="تغییر پوسته">◐</button></header><h1>فهرست کدها و دفترچه‌ها</h1><ul>${codes.map((code) => `<li>${code.supplemental ? 'تکمیلی · بدون وابستگی به جلسه' : `جلسه ${code.session}`} · <a href="${escape(code.githubUrl)}" dir="ltr" rel="noopener noreferrer">${escape(code.name)}</a></li>`).join('')}</ul>`;
+  return `<header><a href="${base}">خانه</a><a href="${base}code/">فهرست کدها</a><button id="theme" type="button" aria-label="تغییر پوسته" title="تغییر پوسته">☀️</button></header><h1>فهرست کدها و دفترچه‌ها</h1><ul class="code-index">${codes.map((code) => `<li>${code.supplemental ? 'تکمیلی · بدون وابستگی به جلسه' : `جلسه ${code.session}`} · <a href="${escape(code.githubUrl)}" dir="ltr" rel="noopener noreferrer">${escape(code.name)}</a></li>`).join('')}</ul>`;
 }
 
 export function restoreRoute(saved: string, base: string) {
