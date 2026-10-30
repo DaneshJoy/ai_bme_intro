@@ -99,6 +99,19 @@ test('course manifest passes the standalone Ajv schema validator', async () => {
   assert.match(result.stdout, /manifest valid: ai-bme-intro \(29 lectures\)/);
 });
 
+test('plain CLI invocation regenerates generated/course-data.json', async () => {
+  const { spawnSync } = await import('node:child_process');
+  const { rm, stat, readFile } = await import('node:fs/promises');
+  const target = path.join(root, 'generated', 'course-data.json');
+  await rm(target, { force: true });
+  const result = spawnSync('node', ['scripts/build-content.mjs'], { cwd: root, encoding: 'utf8' });
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  const existsAfter = await stat(target).then(() => true, () => false);
+  assert.ok(existsAfter, 'generated/course-data.json missing after plain CLI run');
+  const data = JSON.parse(await readFile(target, 'utf8'));
+  assert.equal(data.lessons.length, 29);
+});
+
 test('missing metadata and invalid code mapping fail without artifact', async () => {
   await setup();
   try {
