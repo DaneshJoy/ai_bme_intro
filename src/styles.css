@@ -110,6 +110,14 @@ article h3 { margin-block-start: 1.5em; }
 .content pre { position: relative; max-inline-size: 100%; overflow: auto; background: var(--code-bg); border: 1px solid var(--border); border-radius: .625rem; padding: 1rem; direction: ltr; text-align: left; font-size: .9375rem; line-height: 1.65; }
 .content code { font-family: var(--font-family-code); }
 .content blockquote { background: color-mix(in srgb, var(--accent2) 8%, transparent); border: 1px solid color-mix(in srgb, var(--accent2) 22%, transparent); border-inline-start: 3px solid var(--accent2); border-radius: .5rem; margin-inline: 0; padding-block: .875rem; padding-inline: 1.125rem; color: var(--text); }
+.content blockquote.callout { background: color-mix(in srgb, var(--callout) 8%, transparent); border: 1px solid color-mix(in srgb, var(--callout) 22%, transparent); border-inline-start: 3px solid var(--callout); }
+.callout-note { --callout: var(--accent2); }
+.callout-tip { --callout: var(--teal); }
+.callout-important { --callout: var(--purple); }
+.callout-warning { --callout: var(--warn); }
+.callout-caution { --callout: var(--danger); }
+.callout-title { color: var(--callout); font-weight: 600; margin-block-end: .375rem; }
+.callout p { margin: 0; }
 .table-scroll { overflow-x: auto; margin-block: 1rem; padding: 0; }
 .mermaid { margin-block: 1.5rem; overflow-inline: auto; text-align: center; }
 .mermaid svg { max-inline-size: 100%; block-size: auto; }

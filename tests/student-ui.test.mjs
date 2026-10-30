@@ -35,6 +35,17 @@ test('markdown renders real and alignment-colon separator tables', () => {
   assert.ok(!paragraph.includes('<table>'), `orphan pipe row parsed as table: ${paragraph}`);
 });
 
+test('github alert callouts render with type styling, not raw tags', () => {
+  const note = markdown('> [!NOTE]\n> متن یادداشت');
+  assert.ok(note.includes('callout callout-note'), `note class missing: ${note}`);
+  assert.ok(note.includes('یادداشت'), `Persian label missing: ${note}`);
+  assert.ok(!note.includes('[!NOTE]'), `raw tag leaked: ${note}`);
+  assert.ok(markdown('> [!WARNING]\n> متن هشدار').includes('callout-warning'));
+  assert.ok(markdown('> [!TIP]\n> متن نکته').includes('callout-tip'));
+  assert.ok(markdown('> [!IMPORTANT]\n> متن مهم').includes('callout-important'));
+  assert.ok(markdown('> یک نقل‌قول معمولی').includes('<blockquote>') && !markdown('> یک نقل‌قول معمولی').includes('callout'), 'plain blockquote should stay plain');
+});
+
 test('lone RTL wrapper div tags are dropped from output', () => {
   const rendered = markdown('<div dir="rtl">\n| الف | ب |\n|--:|--:|\n| ۱ | ۲ |\n</div>');
   assert.ok(!rendered.includes('&lt;div'), `wrapper leaked: ${rendered}`);

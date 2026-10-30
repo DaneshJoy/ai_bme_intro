@@ -28,7 +28,17 @@ export const markdown = (source: string) => {
         out.push(`<div class="table-scroll"><table><thead><tr>${rowHtml(rows[0], 'th')}</tr></thead><tbody>${rows.slice(1).map((row) => `<tr>${rowHtml(row, 'td')}</tr>`).join('')}</tbody></table></div>`); continue;
       }
     }
-    if (/^>\s?/.test(line)) { const quote: string[] = []; while (i < lines.length && /^>\s?/.test(lines[i])) quote.push(inline(lines[i++].replace(/^>\s?/, ''))); out.push(`<blockquote>${quote.join('<br>')}</blockquote>`); continue; }
+    if (/^>\s?/.test(line)) {
+      const alert = lines[i].match(/^>\s*\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s?(.*)$/);
+      const alerts = { note: { icon: 'ℹ️', label: 'یادداشت' }, tip: { icon: '💡', label: 'نکته' }, important: { icon: '❗', label: 'مهم' }, warning: { icon: '⚠️', label: 'هشدار' }, caution: { icon: '🚫', label: 'اخطار جدی' } };
+      if (alert) {
+        const meta = alerts[alert[1].toLowerCase()];
+        const body: string[] = alert[2] ? [inline(alert[2])] : [];
+        i++; while (i < lines.length && /^>\s?/.test(lines[i])) body.push(inline(lines[i++].replace(/^>\s?/, '')));
+        out.push(`<blockquote class="callout callout-${alert[1].toLowerCase()}"><div class="callout-title">${meta.icon} ${meta.label}</div><p>${body.filter(Boolean).join('<br>')}</p></blockquote>`);
+        continue;
+      }
+      const quote: string[] = []; while (i < lines.length && /^>\s?/.test(lines[i])) quote.push(inline(lines[i++].replace(/^>\s?/, ''))); out.push(`<blockquote>${quote.join('<br>')}</blockquote>`); continue; }
     if (/^\s*([-*+] |\d+\. )/.test(line)) {
       const parseList = (indent: number, type?: 'ol' | 'ul'): string => {
         const marker = lines[i].match(/^(\s*)([-*+] |\d+\. )/)!;
