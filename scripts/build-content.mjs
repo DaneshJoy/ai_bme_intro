@@ -73,5 +73,8 @@ if (process.argv.includes('--validate')) {
   try { await generate({ outputDir: validationOutput }); }
   finally { await rm(validationOutput, { recursive: true, force: true }); }
   console.log('Validated 29 lessons, instructor boundaries, manifest metadata, and code mappings.');
+} else {
+  const result = await generate();
+  console.log(`Wrote ${result.lessons.length} lessons to generated/course-data.json`);
 }
 

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "validate": "node scripts/build-content.mjs --validate && node scripts/validate-manifest.mjs course.json",
-    "build": "npm run validate && node scripts/build-content.mjs && vite build && cp course.json dist/course.json",
+    "build": "npm run validate && node scripts/build-content.mjs && vite build && mkdir -p dist/generated && cp generated/course-data.json dist/generated/course-data.json && cp course.json dist/course.json",
     "test": "node --test",
     "check": "npm run validate && npm run build && npm test"
   },
@@ -14,5 +14,8 @@
     "ajv": "^8.20.0",
     "typescript": "~5.9.3",
     "vite": "~7.1.12"
+  },
+  "dependencies": {
+    "mermaid": "^12.2.0"
   }
 }
