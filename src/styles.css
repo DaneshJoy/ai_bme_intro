@@ -100,7 +100,7 @@ h1,h2 { line-height: 1.4; }
 .badge-teal { background: color-mix(in srgb, var(--teal) 15%, transparent); color: var(--teal); }
 
 /* Session article (style guide §5.5) */
-article { max-width: 52rem; margin: 2rem auto; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: clamp(1rem, 4vw, 2.5rem); }
+article { max-width: 150rem; margin: 2rem auto; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: clamp(1rem, 4vw, 2.5rem); }
 .lesson-badge { display: inline-block; background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); border-radius: 20px; font-size: .8125rem; font-weight: 500; padding: .25rem 1rem; margin-block-end: .75rem; }
 article h1 { font-size: clamp(1.5rem, 4vw, 2.25rem); }
 article h2 { font-size: 1.5rem; margin-block-start: 1.75em; border-inline-start: 4px solid var(--accent); border-start-start-radius: 4px; padding-inline-start: .6rem; }
@@ -111,6 +111,8 @@ article h3 { margin-block-start: 1.5em; }
 .content code { font-family: var(--font-family-code); }
 .content blockquote { background: color-mix(in srgb, var(--accent2) 8%, transparent); border: 1px solid color-mix(in srgb, var(--accent2) 22%, transparent); border-inline-start: 3px solid var(--accent2); border-radius: .5rem; margin-inline: 0; padding-block: .875rem; padding-inline: 1.125rem; color: var(--text); }
 .table-scroll { overflow-x: auto; margin-block: 1rem; padding: 0; }
+.mermaid { margin-block: 1.5rem; overflow-inline: auto; text-align: center; }
+.mermaid svg { max-inline-size: 100%; block-size: auto; }
 .content table { border-collapse: collapse; width: 100%; min-width: 32rem; font-size: .9375rem; }
 .content th, .content td { border: 1px solid var(--border); padding: .625rem .875rem; text-align: start; vertical-align: top; }
 .content th { background: var(--surface); color: var(--muted); font-weight: 600; }

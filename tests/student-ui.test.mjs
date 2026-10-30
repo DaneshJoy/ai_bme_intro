@@ -4,7 +4,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { escape, renderCodeIndex, restoreRoute } from '../src/render.ts';
+import { escape, markdown, renderCodeIndex, restoreRoute } from '../src/render.ts';
 import { renderRoute } from '../src/routes.ts';
 import { generate } from '../scripts/build-content.mjs';
 import vm from 'node:vm';
@@ -21,6 +21,40 @@ const labels = {
   sessions: '\u062c\u0644\u0633\u0647\u200c\u0647\u0627',
   notFound: '\u0635\u0641\u062d\u0647 \u067e\u06cc\u062f\u0627 \u0646\u0634\u062f',
 };
+test('markdown renders real and alignment-colon separator tables', () => {
+  const rendered = markdown('| دوره | رویداد |\n|--:|--:|\n| ۱۹۵۰ | آزمون |');
+  assert.ok(rendered.includes('<table>'), `no table: ${rendered}`);
+  assert.ok(rendered.includes('text-align:end'), `no right-align: ${rendered}`);
+  assert.ok(rendered.includes('آزمون</td>'), `cell not parsed: ${rendered}`);
+  const centered = markdown('| الف | ب |\n|:---:|:---|\n| ۱ | ۲ |');
+  assert.ok(centered.includes('text-align:center'), `center-align missing: ${centered}`);
+  assert.ok(centered.includes('text-align:start'), `left-align missing: ${centered}`);
+  const plain = markdown('| الف | ب |\n|---|---|\n| ۱ | ۲ |');
+  assert.ok(plain.includes('<th>الف</th>') && plain.includes('<td>۱</td>'), `dash table regressed: ${plain}`);
+  const paragraph = markdown('| this is just text |');
+  assert.ok(!paragraph.includes('<table>'), `orphan pipe row parsed as table: ${paragraph}`);
+});
+
+test('lone RTL wrapper div tags are dropped from output', () => {
+  const rendered = markdown('<div dir="rtl">\n| الف | ب |\n|--:|--:|\n| ۱ | ۲ |\n</div>');
+  assert.ok(!rendered.includes('&lt;div'), `wrapper leaked: ${rendered}`);
+  assert.ok(rendered.includes('<table>'), `table lost next to wrapper: ${rendered}`);
+});
+
+test('mermaid fences render as mermaid blocks, not raw code', () => {
+  const rendered = markdown('```mermaid\ngraph TD; A-->B;\n```');
+  assert.ok(rendered.includes('<div class="mermaid">'), `no mermaid div: ${rendered}`);
+  assert.ok(rendered.includes('graph TD; A--&gt;B;'), `content not escaped properly: ${rendered}`);
+  assert.ok(!rendered.includes('<pre'), `mermaid leaked into pre: ${rendered}`);
+});
+
+test('rendered lesson pages emit mermaid diagram blocks', () => {
+  const lesson = courseData.lessons.find((item) => item.content.includes('```mermaid'));
+  assert.ok(lesson, 'no session file contains a mermaid block');
+  const rendered = renderRoute(`sessions/${lesson.id}`, courseData, '/ai_bme_intro/');
+  assert.ok(rendered.includes('<div class="mermaid">'), 'mermaid block missing from lesson page');
+});
+
 test('routes render verified Persian UI labels without mojibake', () => {
   const routes = [
     [renderRoute('', courseData, '/base/'), [labels.home, '\u062c\u0644\u0633\u0647\u200c\u0647\u0627']],

@@ -45,3 +45,14 @@ const applyTheme = (theme: string) => {
 };
 applyTheme(currentTheme);
 themeButton?.addEventListener('click', () => { const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; applyTheme(next); localStorage.setItem('theme', next); });
+const diagrams = [...app.querySelectorAll<HTMLElement>('.mermaid')];
+if (diagrams.length) {
+  const originals = diagrams.map((node) => node.textContent ?? '');
+  const mermaid = (await import('mermaid')).default;
+  mermaid.initialize({ startOnLoad: false, theme: document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light' });
+  try { await mermaid.run({ nodes: diagrams }); }
+  catch (error) {
+    console.error('mermaid rendering failed', error);
+    diagrams.forEach((node, index) => { node.textContent = originals[index]; });
+  }
+}
