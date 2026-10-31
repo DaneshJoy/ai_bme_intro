@@ -14,7 +14,7 @@
   "lectures": [
     {
       "id": "session-01-intro-to-ai",
-      "title": "جلسه ۱: معرفی درس و آشنایی با هوش مصنوعی",
+      "title": "معرفی درس و آشنایی با هوش مصنوعی",
       "order": 1,
       "durationMinutes": 0,
       "objectives": [],
@@ -22,7 +22,7 @@
     },
     {
       "id": "session-02-agents-and-llm",
-      "title": "جلسه ۲: عامل‌های هوشمند و محیط؛ آشنایی مقدماتی با LLM",
+      "title": "عامل‌های هوشمند و محیط؛ آشنایی مقدماتی با LLM",
       "order": 2,
       "durationMinutes": 0,
       "objectives": [],
@@ -30,7 +30,7 @@
     },
     {
       "id": "session-03-health-data-and-genai",
-      "title": "جلسه ۳: داده‌های زیستی و سلامت؛ Big Data و Generative AI",
+      "title": "داده‌های زیستی و سلامت؛ Big Data و Generative AI",
       "order": 3,
       "durationMinutes": 0,
       "objectives": [],
@@ -38,7 +38,7 @@
     },
     {
       "id": "session-04-python-workshop",
-      "title": "جلسه ۴: کارگاه مقدماتی پایتون و داده",
+      "title": "کارگاه مقدماتی پایتون و داده",
       "order": 4,
       "durationMinutes": 0,
       "objectives": [],
@@ -46,7 +46,7 @@
     },
     {
       "id": "session-05-search-bfs-dfs",
-      "title": "جلسه ۵: صورت‌بندی مسئله جست‌وجو؛ BFS و DFS",
+      "title": "صورت‌بندی مسئله جست‌وجو؛ BFS و DFS",
       "order": 5,
       "durationMinutes": 0,
       "objectives": [],
@@ -54,7 +54,7 @@
     },
     {
       "id": "session-06-uninformed-search-ucs-ids",
-      "title": "جلسه ۶: روش‌های دیگر جست‌وجوی ناآگاهانه؛ Iterative Deepening و UCS",
+      "title": "روش‌های دیگر جست‌وجوی ناآگاهانه؛ Iterative Deepening و UCS",
       "order": 6,
       "durationMinutes": 0,
       "objectives": [],
@@ -62,7 +62,7 @@
     },
     {
       "id": "session-07-informed-heuristics",
-      "title": "جلسه ۷: جست‌وجوی آگاهانه و توابع ابتکاری",
+      "title": "جست‌وجوی آگاهانه و توابع ابتکاری",
       "order": 7,
       "durationMinutes": 0,
       "objectives": [],
@@ -70,7 +70,7 @@
     },
     {
       "id": "session-08-a-star",
-      "title": "جلسه ۸: الگوریتم A*",
+      "title": "الگوریتم A*",
       "order": 8,
       "durationMinutes": 0,
       "objectives": [],
@@ -78,7 +78,7 @@
     },
     {
       "id": "session-09-search-workshop",
-      "title": "جلسه ۹: کارگاه پیاده‌سازی الگوریتم‌های جست‌وجو",
+      "title": "کارگاه پیاده‌سازی الگوریتم‌های جست‌وجو",
       "order": 9,
       "durationMinutes": 0,
       "objectives": [],
@@ -86,7 +86,7 @@
     },
     {
       "id": "session-10-local-search-genetic",
-      "title": "جلسه ۱۰: جست‌وجوی محلی و الگوریتم ژنتیک",
+      "title": "جست‌وجوی محلی و الگوریتم ژنتیک",
       "order": 10,
       "durationMinutes": 0,
       "objectives": [],
@@ -94,7 +94,7 @@
     },
     {
       "id": "session-11-continuous-gradient-descent",
-      "title": "جلسه ۱۱: جست‌وجو در فضای پیوسته و گرادیان کاهشی",
+      "title": "جست‌وجو در فضای پیوسته و گرادیان کاهشی",
       "order": 11,
       "durationMinutes": 0,
       "objectives": [],
@@ -102,7 +102,7 @@
     },
     {
       "id": "session-12-csp",
-      "title": "جلسه ۱۲: مسائل ارضای محدودیت (CSP)",
+      "title": "مسائل ارضای محدودیت (CSP)",
       "order": 12,
       "durationMinutes": 0,
       "objectives": [],
@@ -110,7 +110,7 @@
     },
     {
       "id": "session-13-csp-scheduling",
-      "title": "جلسه ۱۳: حل CSP و مسئله زمان‌بندی",
+      "title": "حل CSP و مسئله زمان‌بندی",
       "order": 13,
       "durationMinutes": 0,
       "objectives": [],
@@ -118,7 +118,7 @@
     },
     {
       "id": "session-14-problem-solving-1",
-      "title": "جلسه ۱۴: جلسه حل تمرین ۱: جست‌وجو، A*، بهینه‌سازی و CSP",
+      "title": "جلسه حل تمرین ۱: جست‌وجو، A*، بهینه‌سازی و CSP",
       "order": 14,
       "durationMinutes": 0,
       "objectives": [],
@@ -126,7 +126,7 @@
     },
     {
       "id": "session-15-adversarial-minimax",
-      "title": "جلسه ۱۵: جست‌وجوی مقابله‌ای؛ Minimax و هرس آلفا–بتا",
+      "title": "جست‌وجوی مقابله‌ای؛ Minimax و هرس آلفا–بتا",
       "order": 15,
       "durationMinutes": 0,
       "objectives": [],
@@ -134,7 +134,7 @@
     },
     {
       "id": "session-16-midterm-1",
-      "title": "جلسه ۱۶: میان‌ترم اول (پوشش جلسات ۱ تا ۱۵)",
+      "title": "میان‌ترم اول (پوشش جلسات ۱ تا ۱۵)",
       "order": 16,
       "durationMinutes": 0,
       "objectives": [],
@@ -142,7 +142,7 @@
     },
     {
       "id": "session-17-logic-expert-systems",
-      "title": "جلسه ۱۷: منطق گزاره‌ای و مرتبه اول؛ سیستم‌های خبره",
+      "title": "منطق گزاره‌ای و مرتبه اول؛ سیستم‌های خبره",
       "order": 17,
       "durationMinutes": 0,
       "objectives": [],
@@ -150,7 +150,7 @@
     },
     {
       "id": "session-18-mdp",
-      "title": "جلسه ۱۸: فرایند تصمیم مارکوف (MDP)",
+      "title": "فرایند تصمیم مارکوف (MDP)",
       "order": 18,
       "durationMinutes": 0,
       "objectives": [],
@@ -158,7 +158,7 @@
     },
     {
       "id": "session-19-reinforcement-learning",
-      "title": "جلسه ۱۹: یادگیری تقویتی و Q-learning",
+      "title": "یادگیری تقویتی و Q-learning",
       "order": 19,
       "durationMinutes": 0,
       "objectives": [],
@@ -166,7 +166,7 @@
     },
     {
       "id": "session-20-bayesian-markov",
-      "title": "جلسه ۲۰: شبکه‌های بیزین و مدل‌های مارکوف",
+      "title": "شبکه‌های بیزین و مدل‌های مارکوف",
       "order": 20,
       "durationMinutes": 0,
       "objectives": [],
@@ -174,7 +174,7 @@
     },
     {
       "id": "session-21-ml-basics-evaluation",
-      "title": "جلسه ۲۱: مبانی یادگیری ماشین و ارزیابی مدل",
+      "title": "مبانی یادگیری ماشین و ارزیابی مدل",
       "order": 21,
       "durationMinutes": 0,
       "objectives": [],
@@ -182,7 +182,7 @@
     },
     {
       "id": "session-22-sklearn-workshop",
-      "title": "جلسه ۲۲: کارگاه یادگیری ماشین با scikit-learn",
+      "title": "کارگاه یادگیری ماشین با scikit-learn",
       "order": 22,
       "durationMinutes": 0,
       "objectives": [],
@@ -190,7 +190,7 @@
     },
     {
       "id": "session-23-problem-solving-2",
-      "title": "جلسه ۲۳: جلسه حل تمرین ۲: منطق، MDP، مدل‌های احتمالاتی و یادگیری ماشین",
+      "title": "جلسه حل تمرین ۲: منطق، MDP، مدل‌های احتمالاتی و یادگیری ماشین",
       "order": 23,
       "durationMinutes": 0,
       "objectives": [],
@@ -198,7 +198,7 @@
     },
     {
       "id": "session-24-neural-networks-deep-learning",
-      "title": "جلسه ۲۴: شبکه‌های عصبی و یادگیری عمیق",
+      "title": "شبکه‌های عصبی و یادگیری عمیق",
       "order": 24,
       "durationMinutes": 0,
       "objectives": [],
@@ -206,7 +206,7 @@
     },
     {
       "id": "session-25-ai-biosignals-bci",
-      "title": "جلسه ۲۵: هوش مصنوعی در سیگنال‌های زیستی و BCI",
+      "title": "هوش مصنوعی در سیگنال‌های زیستی و BCI",
       "order": 25,
       "durationMinutes": 0,
       "objectives": [],
@@ -214,7 +214,7 @@
     },
     {
       "id": "session-26-ai-medical-imaging",
-      "title": "جلسه ۲۶: هوش مصنوعی در تصاویر پزشکی",
+      "title": "هوش مصنوعی در تصاویر پزشکی",
       "order": 26,
       "durationMinutes": 0,
       "objectives": [],
@@ -222,7 +222,7 @@
     },
     {
       "id": "session-27-ai-bme-ethics-validation",
-      "title": "جلسه ۲۷: سایر کاربردهای AI در مهندسی پزشکی؛ اخلاق و اعتبارسنجی",
+      "title": "سایر کاربردهای AI در مهندسی پزشکی؛ اخلاق و اعتبارسنجی",
       "order": 27,
       "durationMinutes": 0,
       "objectives": [],
@@ -230,7 +230,7 @@
     },
     {
       "id": "session-28-midterm-2",
-      "title": "جلسه ۲۸: میان‌ترم دوم / ارزیابی میان‌دوره‌ای دوم (پوشش جلسات ۱۷ تا ۲۶)",
+      "title": "میان‌ترم دوم / ارزیابی میان‌دوره‌ای دوم (پوشش جلسات ۱۷ تا ۲۶)",
       "order": 28,
       "durationMinutes": 0,
       "objectives": [],
@@ -238,7 +238,7 @@
     },
     {
       "id": "session-29-future-of-ai-medicine",
-      "title": "جلسه ۲۹: آینده هوش مصنوعی در پزشکی و ارائه پروژه‌ها",
+      "title": "آینده هوش مصنوعی در پزشکی و ارائه پروژه‌ها",
       "order": 29,
       "durationMinutes": 0,
       "objectives": [],
