@@ -16,6 +16,7 @@
     "vite": "~7.1.12"
   },
   "dependencies": {
+    "katex": "^0.16.47",
     "mermaid": "^12.2.0"
   }
 }

@@ -126,6 +126,9 @@ article h3 { margin-block-start: 1.5em; }
 .content th { background: var(--surface); color: var(--muted); font-weight: 600; }
 .content tr:nth-child(even) td { background: color-mix(in srgb, var(--text) 3%, transparent); }
 .content li { padding-block: .25rem; }
+.content details { margin-block: 1rem; }
+.content details > summary { cursor: pointer; }
+.math-display { direction: ltr; }
 .content hr { border: 0; border-block-start: 1px solid var(--border); margin-block: 2rem; }
 
 /* Code copy button (style guide §5.6, wired in main.ts) */

@@ -1,4 +1,5 @@
 import './styles.css';
+import 'katex/dist/katex.min.css';
 import { restoreRoute } from './render';
 import { renderRoute } from './routes';
 
@@ -35,6 +36,14 @@ for (const pre of [...app.querySelectorAll('pre')]) {
   header.append(button);
   pre.before(block);
   block.append(header, pre);
+}
+const maths = [...app.querySelectorAll<HTMLElement>('.math')];
+if (maths.length) {
+  const { default: katex } = await import('katex');
+  for (const node of maths) {
+    const tex = node.textContent ?? '';
+    if (tex.trim()) katex.render(tex, node, { throwOnError: false, displayMode: node.classList.contains('math-display') });
+  }
 }
 const currentTheme = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 document.documentElement.dataset.theme = currentTheme;

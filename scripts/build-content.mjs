@@ -20,7 +20,9 @@ const supplementalCodes = ['python_selfstudy.ipynb'];
 export async function generate({ sourceDir = root, outputDir = generated } = {}) {
   await rm(path.join(outputDir, 'course-data.json'), { force: true });
   const names = (await readdir(sourceDir)).filter((name) => /^session_\d{2}_.+\.md$/.test(name)).sort();
-  if (names.length !== 29) throw new Error(`Expected 29 session files, found ${names.length}`);
+  const strays = (await readdir(sourceDir)).filter((name) => /^session_\d/.test(name) && !/^session_\d{2}_.+\.md$/.test(name));
+  if (strays.length) throw new Error(`Session files must match session_NN_*.md: ${strays.join(', ')}`);
+  if (!names.length) throw new Error('Expected at least one session file, found none');
   const ids = new Set();
   const lessons = [];
   for (const [index, name] of names.entries()) {
@@ -46,6 +48,7 @@ export async function generate({ sourceDir = root, outputDir = generated } = {})
   }
   const codes = [];
   for (const [session, file] of codeMappings) {
+    if (session > lessons.length) continue; // future session: file may not exist yet
     const fullPath = path.join(sourceDir, 'code', file);
     try { await readFile(fullPath); } catch { throw new Error(`Invalid code mapping: code/${file} does not exist`); }
     const code = { path: `code/${file}`, name: file, session, type: file.endsWith('.ipynb') ? 'notebook' : 'python', githubUrl: `https://github.com/DaneshJoy/ai_bme_intro/blob/main/code/${encodeURIComponent(file)}` };
@@ -58,7 +61,7 @@ export async function generate({ sourceDir = root, outputDir = generated } = {})
   }
   const manifestPath = path.join(sourceDir, 'course.json');
   const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
-  if (manifest.id !== 'ai-bme-intro' || manifest.lectures.length !== lessons.length) throw new Error('Course manifest lecture metadata is missing or invalid');
+  if (manifest.id !== 'ai-bme-intro' || manifest.lectures.length < lessons.length) throw new Error('Course manifest lecture metadata is missing or invalid');
   for (let i = 0; i < lessons.length; i++) {
     for (const key of ['id', 'title', 'order']) if (manifest.lectures[i][key] !== lessons[i][key]) throw new Error(`Manifest ${key} mismatch for ${lessons[i].sourcePath}`);
   }
@@ -70,9 +73,11 @@ export async function generate({ sourceDir = root, outputDir = generated } = {})
 if (process.argv.includes('--validate')) {
   const validationOutput = path.join(root, 'generated-validation');
   await rm(validationOutput, { recursive: true, force: true });
-  try { await generate({ outputDir: validationOutput }); }
+  try {
+    const result = await generate({ outputDir: validationOutput });
+    console.log(`Validated ${result.lessons.length} lessons, instructor boundaries, manifest metadata, and code mappings.`);
+  }
   finally { await rm(validationOutput, { recursive: true, force: true }); }
-  console.log('Validated 29 lessons, instructor boundaries, manifest metadata, and code mappings.');
 } else {
   const result = await generate();
   console.log(`Wrote ${result.lessons.length} lessons to generated/course-data.json`);

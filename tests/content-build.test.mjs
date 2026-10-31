@@ -21,22 +21,25 @@ async function setup() {
   for (const name of await readdir(path.join(root, 'code'))) await copyFile(path.join(root, 'code', name), path.join(sourceDir, 'code', name));
 }
 
-test('generates 29 student lessons, publishes sessions 1–5 whole, clips 6–29', async () => {
+test('generates student lessons, publishes sessions 1–5 whole, clips later sessions', async () => {
   await setup();
   try {
     const data = await generate({ sourceDir, outputDir });
-    assert.equal(data.lessons.length, 29);
-    assert.equal(data.codes.length, 25);
-    const guideTail = await readFile(path.join(sourceDir, names[5]), 'utf8');
-    const guideMatch = guideTail.match(/^## .*راهنمای مدرس.*$/m);
-    const sentinel = guideTail.slice(guideMatch.index + guideMatch[0].length).trim().split(/\s+/)[0];
-    assert.ok(sentinel);
-    const privateSource = guideTail.replace(sentinel, `INSTRUCTOR-ONLY-${sentinel}-9f3c`);
-    await writeFile(path.join(sourceDir, names[5]), privateSource);
-    const privateData = await generate({ sourceDir, outputDir });
-    assert.ok(!JSON.stringify(privateData).includes(`INSTRUCTOR-ONLY-${sentinel}-9f3c`));
-    assert.ok(!(await readFile(path.join(outputDir, 'course-data.json'), 'utf8')).includes(`INSTRUCTOR-ONLY-${sentinel}-9f3c`));
-    await writeFile(path.join(sourceDir, names[5]), guideTail);
+    assert.equal(data.lessons.length, names.length);
+    assert.equal(data.codes.filter((code) => !code.supplemental).length, data.lessons.flatMap((lesson) => lesson.codes).length);
+    if (names.length >= 5) assert.deepEqual(data.lessons[4].codes.map((code) => code.name), ['session_05_bfs_dfs.py']);
+    if (names.length > 5) {
+      const guideTail = await readFile(path.join(sourceDir, names[5]), 'utf8');
+      const guideMatch = guideTail.match(/^## .*راهنمای مدرس.*$/m);
+      const sentinel = guideTail.slice(guideMatch.index + guideMatch[0].length).trim().split(/\s+/)[0];
+      assert.ok(sentinel);
+      const privateSource = guideTail.replace(sentinel, `INSTRUCTOR-ONLY-${sentinel}-9f3c`);
+      await writeFile(path.join(sourceDir, names[5]), privateSource);
+      const privateData = await generate({ sourceDir, outputDir });
+      assert.ok(!JSON.stringify(privateData).includes(`INSTRUCTOR-ONLY-${sentinel}-9f3c`));
+      assert.ok(!(await readFile(path.join(outputDir, 'course-data.json'), 'utf8')).includes(`INSTRUCTOR-ONLY-${sentinel}-9f3c`));
+      await writeFile(path.join(sourceDir, names[5]), guideTail);
+    }
     const selfStudy = data.codes.at(-1);
     assert.equal(selfStudy.path, 'code/python_selfstudy.ipynb');
     assert.equal(selfStudy.githubUrl, 'https://github.com/DaneshJoy/ai_bme_intro/blob/main/code/python_selfstudy.ipynb');
@@ -58,11 +61,16 @@ test('generates 29 student lessons, publishes sessions 1–5 whole, clips 6–29
 
 test('missing or duplicate Unicode guide headings fail without public artifact', async () => {
   await setup();
-  const file = path.join(sourceDir, names[5]);
-  const original = await readFile(file, 'utf8');
+  let file;
+  let original;
+  if (names.length > 5) {
+    file = path.join(sourceDir, names[5]);
+    original = await readFile(file, 'utf8');
+  }
   try {
     await generate({ sourceDir, outputDir });
     assert.ok((await readFile(path.join(outputDir, 'course-data.json'), 'utf8')).length);
+    if (!original) return; // no clipped session yet; baseline build already checked above
     await writeFile(file, original.replace(/^## .*راهنمای مدرس.*$/mu, '## unknown boundary'));
     await assert.rejects(generate({ sourceDir, outputDir }), new RegExp(names[5]));
     await assert.rejects(readFile(path.join(outputDir, 'course-data.json')));
@@ -96,7 +104,7 @@ test('course manifest passes the standalone Ajv schema validator', async () => {
   const { spawnSync } = await import('node:child_process');
   const result = spawnSync('node', ['scripts/validate-manifest.mjs', path.join(root, 'course.json')], { cwd: root, encoding: 'utf8' });
   assert.equal(result.status, 0, result.stderr || result.stdout);
-  assert.match(result.stdout, /manifest valid: ai-bme-intro \(29 lectures\)/);
+  assert.match(result.stdout, /manifest valid: ai-bme-intro \(\d+ lectures\)/);
 });
 
 test('plain CLI invocation regenerates generated/course-data.json', async () => {
@@ -109,7 +117,7 @@ test('plain CLI invocation regenerates generated/course-data.json', async () => 
   const existsAfter = await stat(target).then(() => true, () => false);
   assert.ok(existsAfter, 'generated/course-data.json missing after plain CLI run');
   const data = JSON.parse(await readFile(target, 'utf8'));
-  assert.equal(data.lessons.length, 29);
+  assert.equal(data.lessons.length, names.length);
 });
 
 test('missing metadata and invalid code mapping fail without artifact', async () => {
@@ -121,6 +129,15 @@ test('missing metadata and invalid code mapping fail without artifact', async ()
     await writeFile(path.join(sourceDir, 'course.json'), JSON.stringify(manifest));
     await rm(path.join(sourceDir, 'code', 'session_05_bfs_dfs.py'));
     await assert.rejects(generate({ sourceDir, outputDir }), /Invalid code mapping/);
+    await assert.rejects(readFile(path.join(outputDir, 'course-data.json')));
+  } finally { await rm(sourceDir, { recursive: true, force: true }); await rm(outputDir, { recursive: true, force: true }); }
+});
+
+test('non-conforming session filenames fail loud instead of vanishing', async () => {
+  await setup();
+  try {
+    await writeFile(path.join(sourceDir, 'session_6_stray.md'), '# جلسه شش');
+    await assert.rejects(generate({ sourceDir, outputDir }), /files must match session_NN/);
     await assert.rejects(readFile(path.join(outputDir, 'course-data.json')));
   } finally { await rm(sourceDir, { recursive: true, force: true }); await rm(outputDir, { recursive: true, force: true }); }
 });

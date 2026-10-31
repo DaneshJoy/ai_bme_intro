@@ -1,10 +1,25 @@
 export const escape = (text: string) => text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
 const url = (value: string) => { try { const parsed = new URL(value); return parsed.protocol === 'https:' || parsed.protocol === 'http:' ? escape(value) : ''; } catch { return ''; } };
-const inline = (text: string) => escape(text)
-  .replace(/`([^`]+)`/g, '<code dir="ltr">$1</code>')
-  .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-  .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-  .replace(/\[([^\]]+)\]\(([^\s)]+)\)/g, (_match, label: string, target: string) => { const safe = url(target); return safe ? `<a href="${safe}" rel="noopener noreferrer">${label}</a>` : label; });
+const inline = (text: string) => {
+  // Math spans are stashed as tokens so later backtick/strong/em rules can't corrupt their content.
+  const maths: string[] = [];
+  // Table authors mark LTR bidi runs and line breaks with a fixed tag allowlist;
+  // stashed before escape so nothing else in authored HTML passes through.
+  const tags: string[] = [];
+  const token = (html: string) => { tags.push(html); return `\u0001${tags.length - 1}\u0002`; };
+  let openSpans = 0;
+  return escape(text
+    .replace(/<span dir="ltr">/g, () => { openSpans++; return token('<span dir="ltr">'); })
+    .replace(/<\/span>/g, () => (openSpans > 0 ? (openSpans--, token('</span>')) : '</span>'))
+    .replace(/<br>/g, () => token('<br>')))
+    .replace(/\$([^$\n]+)\$/g, (_match, expr: string) => { maths.push(expr); return `\u0000${maths.length - 1}\u0000`; })
+    .replace(/`([^`]+)`/g, '<code dir="ltr">$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+    .replace(/\[([^\]]+)\]\(([^\s)]+)\)/g, (_match, label: string, target: string) => { const safe = url(target); return safe ? `<a href="${safe}" rel="noopener noreferrer">${label}</a>` : label; })
+    .replace(/\u0000(\d+)\u0000/g, (_match, index: string) => `<span class="math math-inline">${maths[Number(index)]}</span>`)
+    .replace(/\u0001(\d+)\u0002/g, (_match, index: string) => tags[Number(index)]);
+};
 
 export const markdown = (source: string) => {
   // RTL wrapper tags are authoring noise (already RTL document); drop lone wrapper lines only.
@@ -15,6 +30,19 @@ export const markdown = (source: string) => {
     const fence = line.match(/^```([^`]*)$/);
     if (fence) { const body: string[] = []; i++; while (i < lines.length && !/^```\s*$/.test(lines[i])) body.push(lines[i++]); i++; if (fence[1].trim() === 'mermaid') { out.push(`<div class="mermaid">${escape(body.join('\n'))}</div>`); continue; } out.push(`<pre dir="ltr"><code>${escape(body.join('\n'))}</code></pre>`); continue; }
     if (/^(-{3,}|\*{3,})\s*$/.test(line)) { out.push('<hr>'); i++; continue; }
+    if (line.trim() === '<details>') {
+      i++;
+      const inner: string[] = [];
+      let summary = '';
+      while (i < lines.length && lines[i].trim() !== '</details>') inner.push(lines[i++]);
+      if (i < lines.length) i++;
+      const sumIndex = inner.findIndex((entry) => /^\s*<summary>(.*)<\/summary>\s*$/.test(entry));
+      if (sumIndex >= 0) { summary = inline(inner[sumIndex].replace(/^\s*<summary>(.*)<\/summary>\s*$/, '$1')); inner.splice(sumIndex, 1); }
+      out.push(`<details class="answer">${summary ? `<summary>${summary}</summary>` : ''}${markdown(inner.join('\n'))}</details>`);
+      continue;
+    }
+    const displayMath = line.match(/^\s*\$\$(.+)\$\$\s*$/);
+    if (displayMath) { out.push(`<div class="math math-display">${escape(displayMath[1])}</div>`); i++; continue; }
     const heading = line.match(/^(#{1,6})\s+(.+)$/);
     if (heading) { const n = heading[1].length; out.push(`<h${n}>${inline(heading[2])}</h${n}>`); i++; continue; }
     const cells = (row: string) => { const trimmed = row.trim().replace(/^\|/, '').replace(/\|$/, ''); return trimmed.length ? trimmed.split('|') : []; };
