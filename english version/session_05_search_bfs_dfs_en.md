@@ -194,6 +194,8 @@ Running the program in a terminal or Colab:
 !python3 code/session_05_bfs_dfs.py
 ```
 
+The notebook `code/session_05_bfs_dfs.ipynb` is the notebook version of the same code: the same graph and the same BFS/DFS functions cell by cell, with right-to-left step-by-step tables instead of plain `print` output, plus experiments and exercises with automatic checks. Open it in Google Colab (**File > Upload notebook**) or locally with Jupyter and run the cells in order (**Run All**).
+
 ## 📘 Glossary
 
 | Term | Meaning |

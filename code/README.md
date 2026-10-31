@@ -32,7 +32,7 @@ python code/session_05_bfs_dfs.py
 
 | جلسه | فایل | موضوع |
 |:-:|---|--:|
-| 5 | `session_05_bfs_dfs.py` | جست‌وجوی BFS و DFS روی گراف شبکه بیمارستانی/ماز |
+| 5 | `session_05_bfs_dfs.ipynb` و `session_05_bfs_dfs.py` | جست‌وجوی BFS و DFS روی گراف شبکه بیمارستانی/ماز |
 | 6 | `session_06_uninformed_search_ucs_ids.py` | UCS و IDDFS؛ مقایسه هزینه و شمار گره |
 | 7 | `session_07_informed_heuristics.py` | جست‌وجوی آگاهانه؛ هیوریستیک مجاز و مقایسه توابع h |
 | 8 | `session_08_a_star.py` | الگوریتم A* روی شبکه؛ بررسی مجاز بودن هیوریستیک و بهینگی |

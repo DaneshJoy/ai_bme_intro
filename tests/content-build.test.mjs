@@ -27,7 +27,7 @@ test('generates student lessons, publishes sessions 1–5 whole, clips later ses
     const data = await generate({ sourceDir, outputDir });
     assert.equal(data.lessons.length, names.length);
     assert.equal(data.codes.filter((code) => !code.supplemental).length, data.lessons.flatMap((lesson) => lesson.codes).length);
-    if (names.length >= 5) assert.deepEqual(data.lessons[4].codes.map((code) => code.name), ['session_05_bfs_dfs.py']);
+    if (names.length >= 5) assert.deepEqual(data.lessons[4].codes.map((code) => code.name), ['session_05_bfs_dfs.ipynb', 'session_05_bfs_dfs.py']);
     if (names.length > 5) {
       const guideTail = await readFile(path.join(sourceDir, names[5]), 'utf8');
       const guideMatch = guideTail.match(/^## .*راهنمای مدرس.*$/m);

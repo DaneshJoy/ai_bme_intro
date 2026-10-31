@@ -6,7 +6,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const generated = path.join(root, 'generated');
 const guide = /^## .*راهنمای مدرس.*$/gmu;
 const codeMappings = [
-  [5, 'session_05_bfs_dfs.py'], [6, 'session_06_uninformed_search_ucs_ids.py'], [7, 'session_07_informed_heuristics.py'],
+  [5, 'session_05_bfs_dfs.ipynb'], [5, 'session_05_bfs_dfs.py'], [6, 'session_06_uninformed_search_ucs_ids.py'], [7, 'session_07_informed_heuristics.py'],
   [8, 'session_08_a_star.py'], [9, 'session_09_search_workshop.ipynb'], [9, 'session_09_search_workshop.py'],
   [10, 'session_10_local_search_genetic.py'], [11, 'session_11_gradient_descent.py'], [12, 'session_12_csp_backtracking.py'],
   [13, 'session_13_csp_scheduling.py'], [14, 'session_14_solutions.py'], [15, 'session_15_minimax_alphabeta.py'],
