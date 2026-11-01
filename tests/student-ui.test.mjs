@@ -96,6 +96,31 @@ test('theme button renders inline SVG sun/moon icons with CSS state visibility',
   assert.match(css, /#theme svg\s*\{[^}]*stroke:\s*currentColor/);
   assert.match(css, /:root\[data-theme="dark"\]\s*#theme\s+\.icon-sun/);
 });
+test('pre-paint theme initializer and storage-safe theme handling', () => {
+  const inline = html.match(/<script>([\s\S]*?)<\/script>/);
+  assert.ok(inline, 'no inline pre-paint theme script in index.html');
+  const run = (saved, blocked, dark) => {
+    const document = { documentElement: { dataset: {} } };
+    const storage = {
+      getItem: () => { if (blocked) throw new Error('storage blocked'); return saved; },
+      setItem: () => { if (blocked) throw new Error('storage blocked'); },
+    };
+    vm.runInNewContext(inline[1], { document, localStorage: storage, matchMedia: () => ({ matches: dark }) });
+    return document.documentElement.dataset.theme;
+  };
+  assert.equal(run('light', false, true), 'light', 'saved light must win over system dark');
+  assert.equal(run('dark', false, false), 'dark', 'saved dark must win over system light');
+  assert.equal(run(null, false, true), 'dark', 'missing saved falls back to system dark');
+  assert.equal(run(null, false, false), 'light', 'missing saved falls back to system light');
+  assert.equal(run('', false, true), 'dark', 'empty saved falls back to system dark');
+  assert.equal(run('sepia', false, false), 'light', 'unknown saved falls back to system light');
+  assert.equal(run('dark', true, false), 'light', 'storage failure falls back to system light');
+  assert.equal(run(null, true, true), 'dark', 'storage failure falls back to system dark');
+  assert.match(sourceMain, /currentTheme(?::\s*string\s*\|\s*null)?\s*=\s*document\.documentElement\.dataset\.theme/, 'main.ts must reuse existing data-theme');
+  assert.match(sourceMain, /try\s*\{\s*currentTheme\s*=\s*localStorage\.getItem\('theme'\)/, 'storage read must be guarded');
+  assert.match(sourceMain, /try\s*\{\s*localStorage\.setItem\('theme'/, 'storage write must be guarded');
+});
+
 test('route restoration preserves base path, query, and hash', () => {
   assert.equal(restoreRoute(JSON.stringify({ relative: 'sessions/one/', query: '?q=fa', hash: '#part' }), '/ai_bme_intro/'), '/ai_bme_intro/sessions/one/?q=fa#part');
 });

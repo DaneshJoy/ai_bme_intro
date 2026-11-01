@@ -45,14 +45,18 @@ if (maths.length) {
     if (tex.trim()) katex.render(tex, node, { throwOnError: false, displayMode: node.classList.contains('math-display') });
   }
 }
-const currentTheme = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+let currentTheme: string | null = document.documentElement.dataset.theme;
+if (currentTheme !== 'dark' && currentTheme !== 'light') {
+  try { currentTheme = localStorage.getItem('theme'); } catch { currentTheme = null; }
+}
+if (currentTheme !== 'dark' && currentTheme !== 'light') currentTheme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 document.documentElement.dataset.theme = currentTheme;
 const themeButton = document.querySelector<HTMLButtonElement>('#theme');
 const applyTheme = (theme: string) => {
   document.documentElement.dataset.theme = theme;
 };
 applyTheme(currentTheme);
-themeButton?.addEventListener('click', () => { const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; applyTheme(next); localStorage.setItem('theme', next); });
+themeButton?.addEventListener('click', () => { const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; applyTheme(next); try { localStorage.setItem('theme', next); } catch { /* storage unavailable */ } });
 const diagrams = [...app.querySelectorAll<HTMLElement>('.mermaid')];
 if (diagrams.length) {
   const originals = diagrams.map((node) => node.textContent ?? '');
