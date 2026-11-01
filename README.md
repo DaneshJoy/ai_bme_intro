@@ -98,7 +98,7 @@
 
 ## وب‌سایت درس و توسعه محلی
 
-وب‌سایت ایستای فارسی درس در مخزن مستقل [DaneshJoy/ai_bme_intro](https://github.com/DaneshJoy/ai_bme_intro) نگه‌داری می‌شود؛ فایل‌های کد و نوت‌بوک از [فهرست کدها](https://github.com/DaneshJoy/ai_bme_intro/tree/main/code) و پیوندهای هر جلسه مستقیماً در GitHub قابل مشاهده‌اند. آدرس مورد انتظار سایت پس از پیکربندی انتشار: [daneshjoy.github.io/ai_bme_intro](https://daneshjoy.github.io/ai_bme_intro/).
+وب‌سایت ایستای فارسی درس در مخزن مستقل [DaneshJoy/ai_bme_intro](https://github.com/DaneshJoy/ai_bme_intro) نگه‌داری می‌شود؛ فایل‌های کد و نوت‌بوک از [کدها](https://github.com/DaneshJoy/ai_bme_intro/tree/main/code) و پیوندهای هر جلسه مستقیماً در GitHub قابل مشاهده‌اند. آدرس مورد انتظار سایت پس از پیکربندی انتشار: [daneshjoy.github.io/ai_bme_intro](https://daneshjoy.github.io/ai_bme_intro/).
 
 برای اجرای محلی به Node.js نسخهٔ ۲۴ نیاز دارید:
 

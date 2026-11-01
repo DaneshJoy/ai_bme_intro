@@ -50,7 +50,6 @@ document.documentElement.dataset.theme = currentTheme;
 const themeButton = document.querySelector<HTMLButtonElement>('#theme');
 const applyTheme = (theme: string) => {
   document.documentElement.dataset.theme = theme;
-  if (themeButton) themeButton.textContent = theme === 'dark' ? '☀️' : '🌙';
 };
 applyTheme(currentTheme);
 themeButton?.addEventListener('click', () => { const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; applyTheme(next); localStorage.setItem('theme', next); });

@@ -1,4 +1,4 @@
-import { escape, markdown, renderCodeIndex } from './render.ts';
+import { escape, markdown, renderCodeIndex, themeButton } from './render.ts';
 
 type CourseData = {
   manifest: { title: string; description: string };
@@ -10,7 +10,7 @@ const fa = (value: string) => value.replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'
 const badges = ['badge-green', 'badge-blue', 'badge-pink', 'badge-yellow', 'badge-purple', 'badge-teal'];
 
 export function renderRoute(path: string, data: CourseData, base: string) {
-  const nav = `<header><a href="${base}">خانه</a><a href="${base}code/">فهرست کدها</a><button id="theme" type="button" aria-label="تغییر پوسته" title="تغییر پوسته">☀️</button></header>`;
+  const nav = `<header><a href="${base}"${path === '' ? ' aria-current="page"' : ''}>محتوا</a><a href="${base}code/">کدها</a>${themeButton}</header>`;
   if (path === '') return `${nav}<section class="hero"><div class="hero-badge">🎓 دورهٔ آموزشی</div><h1>${escape(data.manifest.title)}</h1><p class="hero-desc">${escape(data.manifest.description)}</p><div class="meta-row"><div class="meta-pill">📚 تعداد جلسات: <span>${fa(String(data.lessons.length))}</span></div></div></section><h2 class="section-title">💬 جلسه‌ها</h2><ol class="session-list">${data.lessons.map((item, index) => `<li><a class="session-card" href="${base}sessions/${item.id}/"><span class="step-num ${badges[index % badges.length]}">${fa(String(item.order))}</span><span class="session-card__title">${escape(item.title)}</span></a></li>`).join('')}</ol>`;
   if (path === 'code') return renderCodeIndex(data.codes, base);
   const match = path.match(/^sessions\/([^/]+)$/);

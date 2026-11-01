@@ -16,8 +16,8 @@ const courseData = await generate({ outputDir: path.join(root, 'dist/generated')
 const sourceMain = await readFile(path.join(root, 'src/main.ts'), 'utf8');
 const sourceRoutes = await readFile(path.join(root, 'src/routes.ts'), 'utf8');
 const labels = {
-  home: '\u062e\u0627\u0646\u0647',
-  codeIndex: '\u0641\u0647\u0631\u0633\u062a \u06a9\u062f\u0647\u0627',
+  home: '\u0645\u062d\u062a\u0648\u0627',
+  codeIndex: '\u06a9\u062f\u0647\u0627',
   sessions: '\u062c\u0644\u0633\u0647\u200c\u0647\u0627',
   notFound: '\u0635\u0641\u062d\u0647 \u067e\u06cc\u062f\u0627 \u0646\u0634\u062f',
 };
@@ -78,7 +78,23 @@ test('routes render verified Persian UI labels without mojibake', () => {
   }
   for (const label of Object.values(labels)) assert.ok(sourceRoutes.includes(label), `missing Persian source label: ${label}`);
   assert.doesNotMatch(sourceRoutes, /\ufffd/u);
-  assert.ok(renderCodeIndex(courseData.codes, '/base/').includes(labels.codeIndex));
+  const home = renderRoute('', courseData, '/base/');
+  const codeIndex = renderCodeIndex(courseData.codes, '/base/');
+  assert.ok(home.includes(`aria-current="page">${labels.home}</a>`));
+  assert.ok(codeIndex.includes(`aria-current="page">${labels.codeIndex}</a>`));
+});
+test('theme button renders inline SVG sun/moon icons with CSS state visibility', () => {
+  const home = renderRoute('', courseData, '/base/');
+  const codeIndex = renderCodeIndex(courseData.codes, '/base/');
+  for (const rendered of [home, codeIndex]) {
+    assert.ok(rendered.includes('<svg class="icon-sun"'), 'sun SVG missing from theme button');
+    assert.ok(rendered.includes('<svg class="icon-moon"'), 'moon SVG missing from theme button');
+    assert.doesNotMatch(rendered, /[\u2600\u{1F319}]/u, 'emoji theme icon leaked into markup');
+  }
+  assert.doesNotMatch(sourceMain, /textContent\s*=\s*theme/, 'emoji textContent swap must be removed');
+  assert.match(css, /#theme\s*\{[^}]*inline-size:\s*40px/);
+  assert.match(css, /#theme svg\s*\{[^}]*stroke:\s*currentColor/);
+  assert.match(css, /:root\[data-theme="dark"\]\s*#theme\s+\.icon-sun/);
 });
 test('route restoration preserves base path, query, and hash', () => {
   assert.equal(restoreRoute(JSON.stringify({ relative: 'sessions/one/', query: '?q=fa', hash: '#part' }), '/ai_bme_intro/'), '/ai_bme_intro/sessions/one/?q=fa#part');
