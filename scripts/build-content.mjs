@@ -4,7 +4,6 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const generated = path.join(root, 'generated');
-const guide = /^## .*راهنمای مدرس.*$/gmu;
 const codeMappings = [
   [5, 'session_05_bfs_dfs.ipynb'], [5, 'session_05_bfs_dfs.py'], [6, 'session_06_uninformed_search_ucs_ids.py'], [7, 'session_07_informed_heuristics.py'],
   [8, 'session_08_a_star.py'], [9, 'session_09_search_workshop.ipynb'], [9, 'session_09_search_workshop.py'],
@@ -37,7 +36,7 @@ export async function generate({ sourceDir = root, outputDir = generated } = {})
     const title = source.match(/^#\s+(.+)$/m)?.[1]?.trim();
     if (!title) throw new Error(`Missing title metadata in ${name}`);
     if (title.includes('?')) throw new Error(`Invalid title metadata in ${name}`);
-    lessons.push({ id, title, order, durationMinutes: 0, objectives: [], status: 'published', source, sourcePath: name, codes: [] });
+    lessons.push({ id, title, order, durationMinutes: 0, objectives: [], status: 'published', content: source, sourcePath: name, codes: [] });
   }
   const codes = [];
   for (const [session, file] of codeMappings) {
@@ -68,7 +67,7 @@ if (process.argv.includes('--validate')) {
   await rm(validationOutput, { recursive: true, force: true });
   try {
     const result = await generate({ outputDir: validationOutput });
-    console.log(`Validated ${result.lessons.length} lessons, instructor boundaries, manifest metadata, and code mappings.`);
+    console.log(`Validated ${result.lessons.length} lessons, manifest metadata, and code mappings.`);
   }
   finally { await rm(validationOutput, { recursive: true, force: true }); }
 } else {

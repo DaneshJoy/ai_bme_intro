@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile, readdir } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -148,29 +148,8 @@ test('404 route preserves the project path, query, and hash', async () => {
   assert.equal(redirect, '/ai_bme_intro/');
   assert.equal(restoreRoute(JSON.stringify(saved), '/ai_bme_intro/'), '/ai_bme_intro/sessions/missing/?q=fa#part');
 });
-test('static build contains 404.html and excludes the instructor-tail marker', async () => {
+test('static build contains 404.html', async () => {
   assert.ok((await readFile(path.join(root, 'dist/404.html'), 'utf8')).includes('pages-route'));
-  const names = (await readdir(root)).filter((n) => /^session_\d{2}_.+\.md$/.test(n)).sort();
-  const clipped = names.find((n) => Number(n.slice(8, 10)) > 5);
-  if (!clipped) return; // no clipped sessions published yet, nothing to leak-check
-  const marker = (await readFile(path.join(root, clipped), 'utf8')).match(/^## .*راهنمای مدرس.*$/m)[0];
-  const sentinel = marker.match(/\(([^()]+)\)$/)[1];
-  async function filesUnder(directory) {
-    return (await Promise.all((await readdir(directory, { withFileTypes: true })).map((entry) => {
-      const file = path.join(directory, entry.name);
-      return entry.isDirectory() ? filesUnder(file) : [file];
-    }))).flat();
-  }
-  for (const directory of ['generated', 'dist']) {
-    const target = path.join(root, directory);
-    try {
-      for (const file of await filesUnder(target)) {
-        assert.ok(!(await readFile(file)).includes(Buffer.from(sentinel)), `instructor marker leaked into ${file}`);
-      }
-    } catch (error) {
-      if (error.code !== 'ENOENT') throw error;
-    }
-  }
 });
 test('course stylesheet preserves RTL responsive layout and visible keyboard focus', () => {
   assert.match(html, /<html lang="fa" dir="rtl">/);
