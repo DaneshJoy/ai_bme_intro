@@ -54,7 +54,7 @@
     },
     {
       "id": "session-06-uninformed-search-ucs-ids",
-      "title": "روش‌های دیگر جست‌وجوی ناآگاهانه؛ Iterative Deepening و UCS",
+      "title": "روش‌های دیگر جست‌وجوی ناآگاهانه؛ IDDFS و UCS",
       "order": 6,
       "durationMinutes": 0,
       "objectives": [],
