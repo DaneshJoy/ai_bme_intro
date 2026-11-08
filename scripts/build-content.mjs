@@ -37,14 +37,7 @@ export async function generate({ sourceDir = root, outputDir = generated } = {})
     const title = source.match(/^#\s+(.+)$/m)?.[1]?.trim();
     if (!title) throw new Error(`Missing title metadata in ${name}`);
     if (title.includes('?')) throw new Error(`Invalid title metadata in ${name}`);
-    const matches = [...source.matchAll(guide)];
-    if (order <= 5) {
-      if (matches.length) throw new Error(`Unexpected instructor-guide marker in approved student-only ${name}`);
-    } else if (matches.length !== 1) {
-      throw new Error(`Expected exactly one instructor-guide heading in ${name}; found ${matches.length}`);
-    }
-    const content = order <= 5 ? source : source.slice(0, matches[0].index).trimEnd();
-    lessons.push({ id, title, order, durationMinutes: 0, objectives: [], status: 'published', content, sourcePath: name, codes: [] });
+    lessons.push({ id, title, order, durationMinutes: 0, objectives: [], status: 'published', source, sourcePath: name, codes: [] });
   }
   const codes = [];
   for (const [session, file] of codeMappings) {
