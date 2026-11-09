@@ -12,6 +12,6 @@ const run = (command, args) => new Promise((resolve, reject) => {
 
 await run(process.platform === 'win32' ? 'npm.cmd' : 'npm', ['run', 'build:offline']);
 const output = path.join(root, 'offline', 'ai-bme-intro-offline.zip');
-await rm(path.dirname(output), { recursive: true, force: true });
 await mkdir(path.dirname(output), { recursive: true });
+await rm(output, { force: true });
 await run(process.platform === 'win32' ? 'python' : 'python3', ['scripts/create-zip.py', 'dist', output]);

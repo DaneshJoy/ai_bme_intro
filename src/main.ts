@@ -14,8 +14,10 @@ const base = import.meta.env.BASE_URL;
 const data: CourseData = courseData;
 const savedRoute = sessionStorage.getItem('pages-route');
 if (savedRoute) { sessionStorage.removeItem('pages-route'); history.replaceState(null, '', restoreRoute(savedRoute, base)); }
-const path = location.protocol === 'file:' ? '' : location.pathname.startsWith(base) ? location.pathname.slice(base.length).replace(/\/$/, '') : '__not_found__';
-app.innerHTML = renderRoute(path, data, base);
+const offline = location.protocol === 'file:';
+const path = offline ? location.hash.replace(/^#\/?/, '').replace(/\/$/, '') : location.pathname.startsWith(base) ? location.pathname.slice(base.length).replace(/\/$/, '') : '__not_found__';
+app.innerHTML = renderRoute(path, data, base, offline);
+if (offline) addEventListener('hashchange', () => location.reload());
 for (const pre of [...app.querySelectorAll('pre')]) {
   const block = document.createElement('div');
   block.className = 'code-block';
