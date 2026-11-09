@@ -5,3 +5,4 @@ node_modules/
 dist/
 generated/
 generated-validation/
+offline/

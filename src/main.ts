@@ -1,5 +1,6 @@
 import './styles.css';
 import 'katex/dist/katex.min.css';
+import courseData from '../generated/course-data.json';
 import { restoreRoute } from './render';
 import { renderRoute } from './routes';
 
@@ -10,10 +11,10 @@ type CourseData = {
 };
 const app = document.querySelector<HTMLElement>('#app')!;
 const base = import.meta.env.BASE_URL;
-const data: CourseData = await fetch(`${base}generated/course-data.json`).then((r) => { if (!r.ok) throw Error('اطلاعات دوره بارگذاری نشد.'); return r.json(); });
+const data: CourseData = courseData;
 const savedRoute = sessionStorage.getItem('pages-route');
 if (savedRoute) { sessionStorage.removeItem('pages-route'); history.replaceState(null, '', restoreRoute(savedRoute, base)); }
-const path = location.pathname.startsWith(base) ? location.pathname.slice(base.length).replace(/\/$/, '') : '__not_found__';
+const path = location.protocol === 'file:' ? '' : location.pathname.startsWith(base) ? location.pathname.slice(base.length).replace(/\/$/, '') : '__not_found__';
 app.innerHTML = renderRoute(path, data, base);
 for (const pre of [...app.querySelectorAll('pre')]) {
   const block = document.createElement('div');
