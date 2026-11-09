@@ -17,6 +17,10 @@ npm run validate
 npm run build
 npm test
 npm run check
+# بستهٔ آفلاین دانشجویی (میزبان POSIX؛ روی ویندوز از WSL):
+npm run package:offline
+# آزمون دودی بستهٔ آفلاین با Chrome بی‌سر (نیازمند نصب Chrome):
+npm run test:offline
 ```
 
 مخزن `DaneshJoy/ai_bme_intro` در https://github.com/DaneshJoy/ai_bme_intro است. لینک فایل‌های منبع باید به همان مخزن و مسیر دقیق فایل در شاخه `main` اشاره کند. برای انتشار، در تنظیمات مخزن به **Settings → Pages → Build and deployment** بروید و **Source: GitHub Actions** را انتخاب کنید. گردش‌کار `.github/workflows/deploy.yml` با ارسال به `main` یا اجرای دستی، بررسی‌ها را اجرا و `dist/` را منتشر می‌کند؛ آدرس مورد انتظار https://daneshjoy.github.io/ai_bme_intro/ است. فعال‌سازی Pages در تنظیمات مخزن یک اقدام مالک مخزن است.
