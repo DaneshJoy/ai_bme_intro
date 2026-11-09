@@ -1,3 +1,17 @@
 import { defineConfig } from 'vite';
 
-export default defineConfig({ base: process.env.COURSE_BASE ?? '/ai_bme_intro/' });
+const offline = process.env.COURSE_BASE === './';
+
+export default defineConfig({
+  base: process.env.COURSE_BASE ?? '/ai_bme_intro/',
+  build: offline ? {
+    modulePreload: false,
+    rollupOptions: {
+      output: {
+        format: 'es',
+        inlineDynamicImports: true,
+        entryFileNames: 'assets/app.js',
+      },
+    },
+  } : undefined,
+});
