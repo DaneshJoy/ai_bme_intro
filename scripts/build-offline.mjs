@@ -22,6 +22,9 @@ let index = await readFile(path.join(dist, 'index.html'), 'utf8');
 index = index.replace(/<script type="module"[^>]*src="\.\/assets\/app\.js"><\/script>\s*/, () => `<script type="module">${app}</script>\n`);
 const css = (await readFile(path.join(dist, 'assets', stylesheet), 'utf8')).replaceAll('url(./', 'url(./assets/');
 index = index.replace(new RegExp(`<link rel="stylesheet"[^>]*href="\\.\\/assets\\/${stylesheet}">`), () => `<style>${css}</style>`);
+if (index.includes('src="./assets/app.js"') || index.includes(`href="./assets/${stylesheet}"`)) {
+  throw new Error('offline inlining failed: dist/index.html still references external app.js or stylesheet');
+}
 await writeFile(path.join(dist, 'index.html'), index);
 await mkdir(path.join(root, 'dist', 'generated'), { recursive: true });
 await Promise.all([

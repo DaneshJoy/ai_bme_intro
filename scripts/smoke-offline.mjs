@@ -13,7 +13,6 @@ const result = spawnSync(browser, [
   '--headless=new',
   '--disable-gpu',
   '--no-sandbox',
-  '--allow-file-access-from-files',
   '--enable-logging=stderr',
   '--virtual-time-budget=5000',
   '--dump-dom',
