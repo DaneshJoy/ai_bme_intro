@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -8,6 +10,8 @@ import { escape, markdown, renderCodeIndex, restoreRoute } from '../src/render.t
 import { renderRoute } from '../src/routes.ts';
 import { generate } from '../scripts/build-content.mjs';
 import vm from 'node:vm';
+
+const execFileAsync = promisify(execFile);
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const html = await readFile(path.join(root, 'index.html'), 'utf8');
@@ -156,4 +160,41 @@ test('course stylesheet preserves RTL responsive layout and visible keyboard foc
   assert.match(css, /:focus-visible/);
   assert.match(css, /@media/);
   assert.doesNotMatch(css, /\b(?:left|right)\s*:/);
+});
+
+
+test('offline entry embeds generated course data and has no remote font resources', () => {
+  assert.match(sourceMain, /import\s+courseData\s+from\s+['"]\.\.\/generated\/course-data\.json['"]/);
+  assert.doesNotMatch(sourceMain, /fetch\(.*generated\/course-data\.json/s);
+  assert.doesNotMatch(html, /https:\/\/(?:fonts\.googleapis\.com|fonts\.gstatic\.com)/);
+  assert.match(sourceMain, /location\.protocol === 'file:'/);
+});
+
+test('offline build has local assets, code, and no generated JSON fetch', async () => {
+  await execFileAsync('npm', ['run', 'build:offline'], { cwd: root });
+  assert.ok(await readFile(path.join(root, 'dist/index.html'), 'utf8'));
+  assert.ok((await readdir(path.join(root, 'dist/assets'))).some((file) => file.endsWith('.woff2')), 'local font asset missing');
+  assert.ok((await readdir(path.join(root, 'dist/code'))).length, 'code files missing');
+  const files = await readdir(path.join(root, 'dist/assets'));
+  const assets = await Promise.all(files.filter((file) => file.endsWith('.js')).map((file) => readFile(path.join(root, 'dist/assets', file), 'utf8')));
+  assert.doesNotMatch(assets.join(''), /generated\/course-data\.json/);
+});
+
+test('offline routes use hash navigation and local code files', () => {
+  const lesson = courseData.lessons[0];
+  const home = renderRoute('', courseData, './', true);
+  const lessonPage = renderRoute(`sessions/${lesson.id}`, courseData, './', true);
+  const codePage = renderRoute('code', courseData, './', true);
+  assert.match(home, new RegExp(`href="#/sessions/${lesson.id}/"`));
+  assert.match(home, /href="#\/code\/"/);
+  assert.match(lessonPage, /href="#\/"/);
+  assert.match(codePage, /href="code\//);
+  assert.doesNotMatch(codePage, /github\.com/);
+});
+
+test('Pages routes retain pathname links', () => {
+  const lesson = courseData.lessons[0];
+  const home = renderRoute('', courseData, '/ai_bme_intro/');
+  assert.match(home, new RegExp(`href="/ai_bme_intro/sessions/${lesson.id}/"`));
+  assert.match(home, /href="\/ai_bme_intro\/code\/"/);
 });

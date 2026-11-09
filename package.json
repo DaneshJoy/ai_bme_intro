@@ -8,7 +8,10 @@
     "validate": "node scripts/build-content.mjs --validate && node scripts/validate-manifest.mjs course.json",
     "build": "npm run validate && node scripts/build-content.mjs && vite build && mkdir -p dist/generated && cp generated/course-data.json dist/generated/course-data.json && cp course.json dist/course.json",
     "test": "node --test",
-    "check": "npm run validate && npm run build && npm test"
+    "test:offline": "node scripts/smoke-offline.mjs",
+    "check": "npm run validate && npm run build && npm test",
+    "build:offline": "npm run validate && node scripts/build-offline.mjs",
+    "package:offline": "node scripts/package-offline.mjs"
   },
   "devDependencies": {
     "ajv": "^8.20.0",
