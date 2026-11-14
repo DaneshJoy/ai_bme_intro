@@ -11,6 +11,22 @@ test('rendering escapes raw HTML and script XSS and rejects non-http Markdown UR
   assert.equal(markdown('<img src=x>\n\n<script>alert(1)</script>\n\n[unsafe](javascript:alert(1)'), '<p>&lt;img src=x&gt;</p>\n<p>&lt;script&gt;alert(1)&lt;/script&gt;</p>\n<p>unsafe</p>');
 });
 
+test('authored raw HTML blocks render through the tag/attribute allowlist', () => {
+  const rendered = markdown('<div dir="ltr" align="center">\n\n<table style="border-collapse:collapse"><tr><th></th><th>x</th></tr><tr><td style="background:#7cc4ff"><b>🚑 S</b><br><small>(0,0)</small></td><td>■</td></tr></table>\n\n<p align="center"><i>caption <sub>M</sub></i></p>\n\n</div>');
+  for (const expected of ['<div dir="ltr" align="center">', '<table style="border-collapse:collapse">', '<b>🚑 S</b>', '<br>', '<small>(0,0)</small>', '<p align="center"><i>caption <sub>M</sub></i></p>', '</div>']) {
+    assert.ok(rendered.includes(expected), `missing ${expected}: ${rendered}`);
+  }
+  assert.ok(!rendered.includes('&lt;table'), `table escaped: ${rendered}`);
+});
+
+test('raw HTML blocks still neuter scripts, images and unsafe styles', () => {
+  const rendered = markdown('<table><tr><td><script>alert(1)</script><img src=x onerror="alert(2)"></td></tr><tr><td style="background:url(javascript:alert(3))">x</td></tr></table>');
+  assert.ok(!rendered.includes('<script'), `script survived: ${rendered}`);
+  assert.ok(!rendered.includes('<img'), `image survived: ${rendered}`);
+  assert.ok(!rendered.includes('url('), `unsafe style survived: ${rendered}`);
+  assert.ok(rendered.includes('&lt;script&gt;'), `text not preserved: ${rendered}`);
+});
+
 test('inline and display math are wrapped for KaTeX, content stays escaped', () => {
   assert.equal(markdown('عمق <b>نمی‌شود</b> $d$ یعنی $x<y$'), '<p>عمق &lt;b&gt;نمی‌شود&lt;/b&gt; <span class="math math-inline">d</span> یعنی <span class="math math-inline">x&lt;y</span></p>');
   assert.equal(markdown('$a*b*c$'), '<p><span class="math math-inline">a*b*c</span></p>');

@@ -21,9 +21,50 @@ const inline = (text: string) => {
     .replace(/\u0001(\d+)\u0002/g, (_match, index: string) => tags[Number(index)]);
 };
 
+// Authored raw-HTML blocks (grid maps) pass through this tag/attribute allowlist only; all other HTML stays escaped.
+const htmlTags = new Set(['div', 'p', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'b', 'i', 'small', 'sub', 'sup', 'strong', 'em', 'br', 'span']);
+const htmlAttr = /^(dir|align|style|class|colspan|rowspan)$/;
+const htmlAttrValue: Record<string, RegExp | undefined> = { dir: /^(ltr|rtl|auto)$/, align: /^(start|end|center|left|right)$/, class: /^[a-zA-Z0-9 _-]+$/, colspan: /^\d{1,2}$/, rowspan: /^\d{1,2}$/ };
+const htmlStyleOk = (value: string) => /^[a-zA-Z0-9#%.,;:\s()+-]+$/.test(value) && !/url|expression|@import|javascript|behavior/i.test(value);
+const htmlTag = (raw: string, close: string, name: string, attrs: string) => {
+  const tag = name.toLowerCase();
+  if (!htmlTags.has(tag)) return escape(raw);
+  if (close) return `</${tag}>`;
+  const kept = [...attrs.matchAll(/([a-zA-Z-]+)\s*=\s*"([^"]*)"/g)].flatMap(([, key, value]) => {
+    const attr = key.toLowerCase();
+    if (!htmlAttr.test(attr)) return [];
+    if (attr === 'style' ? !htmlStyleOk(value) : !htmlAttrValue[attr]?.test(value)) return [];
+    return [` ${attr}="${value}"`];
+  });
+  return `<${tag}${kept.join('')}>`;
+};
+const htmlBlock = (line: string) => {
+  const tagRe = /<(\/?)([a-zA-Z][a-zA-Z0-9-]*)((?:"[^"]*"|'[^']*'|[^<>"'])*)>/g;
+  let html = '';
+  let last = 0;
+  for (const match of line.matchAll(tagRe)) {
+    const at = match.index ?? 0;
+    html += line.slice(last, at).replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+    html += htmlTag(match[0], match[1], match[2], match[3]);
+    last = at + match[0].length;
+  }
+  return html + line.slice(last).replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+};
+// Structural tags start a raw HTML block; inline tags (span, br) stay with inline().
+const htmlBlockStart = /^\s*<\/?(?:div|p|table|thead|tbody|tr|th|td|small|sub|sup|b|i)\b/i;
+
 export const markdown = (source: string) => {
-  // RTL wrapper tags are authoring noise (already RTL document); drop lone wrapper lines only.
-  const lines = source.split(/\r?\n/).filter((entry) => !/^\s*(<\/?div( dir="rtl")?\s*\/?>)\s*$/.test(entry));
+  // RTL wrapper tags are authoring noise (already RTL document); drop lone wrapper lines only,
+  // keeping a lone </div> that closes an authored block (e.g. <div dir="ltr" align="center">).
+  const rtlWrapper = /^\s*(<\/?div( dir="rtl")?\s*\/?>)\s*$/;
+  let wrapperDepth = 0;
+  const lines = source.split(/\r?\n/).filter((entry) => {
+    const wrapper = entry.match(rtlWrapper);
+    if (!wrapper) return true;
+    if (wrapper[1].startsWith('</')) { if (wrapperDepth === 0) return true; wrapperDepth--; return false; }
+    wrapperDepth++;
+    return false;
+  });
   const out: string[] = [];
   for (let i = 0; i < lines.length;) {
     const line = lines[i];
@@ -41,6 +82,7 @@ export const markdown = (source: string) => {
       out.push(`<details class="answer">${summary ? `<summary>${summary}</summary>` : ''}${markdown(inner.join('\n'))}</details>`);
       continue;
     }
+    if (htmlBlockStart.test(line)) { out.push(htmlBlock(line.trimEnd())); i++; continue; }
     const displayMath = line.match(/^\s*\$\$(.+)\$\$\s*$/);
     if (displayMath) { out.push(`<div class="math math-display">${escape(displayMath[1])}</div>`); i++; continue; }
     const heading = line.match(/^(#{1,6})\s+(.+)$/);
@@ -97,7 +139,7 @@ export const markdown = (source: string) => {
       out.push(parseList(line.match(/^\s*/)?.[0].length ?? 0)); continue;
     }
     if (!line.trim()) { i++; continue; }
-    const para: string[] = []; while (i < lines.length && lines[i].trim() && !/^(#{1,6}\s|```|>\s?|\s*[-*+] |\s*\d+\. )/.test(lines[i])) para.push(lines[i++]);
+    const para: string[] = []; while (i < lines.length && lines[i].trim() && !/^(#{1,6}\s|```|>\s?|\s*[-*+] |\s*\d+\. )/.test(lines[i]) && !htmlBlockStart.test(lines[i])) para.push(lines[i++]);
     out.push(`<p>${para.map(inline).join('<br>')}</p>`);
   }
   return out.join('\n');

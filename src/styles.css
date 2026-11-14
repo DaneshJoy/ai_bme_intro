@@ -135,6 +135,9 @@ article h3 { margin-block-start: 1.5em; }
 .mermaid { margin-block: 1.5rem; overflow-inline: auto; text-align: center; }
 .mermaid svg { max-inline-size: 100%; block-size: auto; }
 .content table { border-collapse: collapse; width: 100%; min-width: 32rem; font-size: .9375rem; }
+/* Authored grid maps size their own cells, so keep their declared width and let narrow screens scroll. */
+.content table[style] { width: auto; min-width: 0; }
+.content div[align="center"] { overflow-x: auto; }
 .content th, .content td { border: 1px solid var(--border); padding: .625rem .875rem; text-align: start; vertical-align: top; }
 .content th { background: var(--surface); color: var(--muted); font-weight: 600; }
 .content tr:nth-child(even) td { background: color-mix(in srgb, var(--text) 3%, transparent); }

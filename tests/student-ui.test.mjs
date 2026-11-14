@@ -56,6 +56,14 @@ test('lone RTL wrapper div tags are dropped from output', () => {
   assert.ok(rendered.includes('<table>'), `table lost next to wrapper: ${rendered}`);
 });
 
+test('sessions with authored HTML grid tables render real tables', () => {
+  const lesson = courseData.lessons.find((item) => item.content.includes('<table style='));
+  assert.ok(lesson, 'no session file contains an authored HTML table');
+  const rendered = renderRoute(`sessions/${lesson.id}`, courseData, '/ai_bme_intro/');
+  assert.ok(!rendered.includes('&lt;table'), `authored table escaped: ${lesson.id}`);
+  assert.ok(rendered.includes('<table style="'), `authored table missing: ${lesson.id}`);
+});
+
 test('mermaid fences render as mermaid blocks, not raw code', () => {
   const rendered = markdown('```mermaid\ngraph TD; A-->B;\n```');
   assert.ok(rendered.includes('<div class="mermaid">'), `no mermaid div: ${rendered}`);
