@@ -228,6 +228,11 @@ $$h(n) \le c(n, n') + h(n')$$
 
 یعنی برآورد $h$ نباید بیش از «هزینه یک گام به سمت همسایه + برآورد همان همسایه» افت کند (شرط مثلثی). هر هیوریستیک ثابت (با شرط $0=h(goal)$) مجاز هم هست، اما عکس آن همیشه برقرار نیست.
 
+> نکته:
+>
+> $h(n)$: تخمین هزینه باقی‌مانده تا هدف است.
+> $c(n,n')$: هزینه واقعی حرکت بین دو گره است (از نوع h*(n)).
+
 ### ۴.۱ شهود ساده
 - **مجاز** = «دوستِ خوش‌بین». او هرگز نمی‌گوید راه از واقعیت **بیشتر** است؛ ممکن است بگوید «۵ دقیقه» و در واقع ۱۰ دقیقه شود، ولی هرگز نمی‌گوید «۲۰ دقیقه» وقتی ۱۰ دقیقه کافی است.
 - **ثابت** = «برآوردهای دوستِ خوش‌بین با هم **سازگارند**». اگر از A تا هدف را ۸ دقیقه می‌گوید، از همسایهٔ A که یک دقیقه آن‌طرف‌تر است نباید ناگهان ۳ دقیقه بگوید؛ برآورد در هر گام حداکثر به اندازهٔ هزینهٔ همان گام می‌تواند کم شود.
@@ -241,11 +246,19 @@ flowchart LR
 
 شرط ثبات می‌گوید «راه مستقیم تخمینی $h(n)$ نباید از راهِ دور‌زدن از $'n$ بلندتر باشد»؛ دقیقاً مثل نامساوی مثلث.
 
-**چرا ثبات ⟸ مجاز بودن؟ (اثبات ساده).** اگر $n \to n_1 \to n_2 \to \dots \to goal$ بهترین مسیر باشد:
+**چرا ثبات ⟸ مجاز بودن؟ (اثبات ساده).** اگر مسیر زیر، بهترین مسیر باشد:
 
+<div dir="ltr" align="center">
+$$n \to n_1 \to n_2 \to \dots \to goal$$
+</div>
+
+با شرط ثبات داریم:
+
+<div dir="ltr" align="center">
 $$h(n) \le c_1 + h(n_1) \le c_1 + c_2 + h(n_2) \le \dots \le c_1 + c_2 + \dots + c_k + h(goal) = h^*(n)$$
+</div>
 
-چون $h(goal)$. 0=پس ثابت‌بودن، مجاز بودن را نتیجه می‌دهد.
+چون h(goal)=0 پس ثابت‌بودن، مجاز بودن را نتیجه می‌دهد.
 
 ### ۴.۲ الگوریتم جدید ۱: محاسبهٔ $h^*(n)$ با جست‌وجوی معکوس
 برای بررسی مجاز بودن باید $h^*(n)$ (هزینهٔ واقعی) را داشته باشیم. روش: **از خود هدف شروع کن و به عقب برو.**
@@ -255,25 +268,31 @@ $$h(n) \le c_1 + h(n_1) \le c_1 + c_2 + h(n_2) \le \dots \le c_1 + c_2 + \dots +
 - چون اینجا همه هزینه‌ها ۱ است، Dijkstra همان BFS است و جست‌وجو «موج‌به‌موج» پیش می‌رود.
 
 **گام‌های الگوریتم:**
-1. $h^*(goal)=0$ و هدف را در صف بگذار.
-2. گره $u$ را از صف بردار؛ هر همسایهٔ دیده‌نشدهٔ $v$ را با $h^*(v)=h^*(u)+1$ ثبت و وارد صف کن.
+1. هدف را در صف بگذار (h*(goal)=0).
+2. گره $u$ را از صف بردار؛ هر همسایهٔ دیده‌نشدهٔ $v$ را با h*(v)=h*(u)+1 ثبت و وارد صف کن.
 3. تا خالی‌شدن صف تکرار کن.
 
 **اجرای گام‌به‌گام (چند گام اول):**
 
+<div dir="ltr">
+
 | گام | گرهٔ برداشته‌شده | همسایه‌های جدید و مقدار $h^*$ | توضیح |
-|---|---|---|---|
-| ۱ | $(4,4)$ | $(3,4)=1$ | $(4,3)$ بسته است؛ فقط یک راه ورود به هدف وجود دارد |
-| ۲ | $(3,4)$ | $(2,4)=2$ | $(3,3)$ بسته است |
+|---|:-:|:--|--:|
+| ۱ | $(4,4)$ | $(3,4)=1$ | خانه (4,3) بسته است؛ فقط یک راه ورود به هدف وجود دارد |
+| ۲ | $(3,4)$ | $(2,4)=2$ | خانه (3,3) بسته است |
 | ۳ | $(2,4)$ | $(1,4)=3$، $(2,3)=3$ | |
 | ۴ | $(1,4)$ | $(0,4)=4$، $(1,3)=4$ | |
-| ۵ | $(2,3)$ | $(2,2)=4$ | $(1,3)$ قبلاً دیده شده؛ $(3,3)$ بسته است |
+| ۵ | $(2,3)$ | $(2,2)=4$ | خانه (1,3) قبلاً دیده شده؛ خانه (3,3) بسته است |
 | ... | ... | ... | همین روند تا پر شدن همهٔ ۲۰ خانهٔ باز |
+
+</div>
 
 **نتیجهٔ کامل به‌صورت «موج»:**
 
+<div dir="ltr">
+
 | موج (مقدار $h^*$) | گره‌ها |
-|---|---|
+|--:|--:|
 | ۰ | $(4,4)$ |
 | ۱ | $(3,4)$ |
 | ۲ | $(2,4)$ |
@@ -286,6 +305,8 @@ $$h(n) \le c_1 + h(n_1) \le c_1 + c_2 + h(n_2) \le \dots \le c_1 + c_2 + \dots +
 | ۹ | $(1,0)$ |
 | ۱۰ | $(0,0)$ |
 
+</div>
+
 <div dir="ltr" align="center">
 
 <table style="border-collapse:collapse;margin:auto"><tr><th></th><th style="font-size:12px;color:#666">c0</th><th style="font-size:12px;color:#666">c1</th><th style="font-size:12px;color:#666">c2</th><th style="font-size:12px;color:#666">c3</th><th style="font-size:12px;color:#666">c4</th></tr><tr><th style="font-size:12px;color:#666">r0</th><td style="background:#7cc4ff;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>10</b></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:rgb(181,184,151);color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>6</b></td><td style="background:rgb(190,195,165);color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>5</b></td><td style="background:rgb(199,206,179);color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>4</b></td></tr><tr><th style="font-size:12px;color:#666">r1</th><td style="background:rgb(154,151,109);color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>9</b></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:rgb(190,195,165);color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>5</b></td><td style="background:rgb(199,206,179);color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>4</b></td><td style="background:rgb(208,217,193);color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>3</b></td></tr><tr><th style="font-size:12px;color:#666">r2</th><td style="background:rgb(163,162,123);color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>8</b></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:rgb(199,206,179);color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>4</b></td><td style="background:rgb(208,217,193);color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>3</b></td><td style="background:rgb(217,228,207);color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>2</b></td></tr><tr><th style="font-size:12px;color:#666">r3</th><td style="background:rgb(172,173,137);color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>7</b></td><td style="background:rgb(181,184,151);color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>6</b></td><td style="background:rgb(190,195,165);color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>5</b></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:rgb(226,239,221);color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>1</b></td></tr><tr><th style="font-size:12px;color:#666">r4</th><td style="background:rgb(163,162,123);color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>8</b></td><td style="background:rgb(172,173,137);color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>7</b></td><td style="background:rgb(181,184,151);color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>6</b></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#8be28b;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>0</b></td></tr></table>
@@ -294,51 +315,64 @@ $$h(n) \le c_1 + h(n_1) \le c_1 + c_2 + h(n_2) \le \dots \le c_1 + c_2 + \dots +
 
 </div>
 
-### ۴.۳ مقایسه $h$ و $h^*$: دیوارها چه می‌کنند؟
+### ۴.۳ مقایسه h و *h: دیوارها چه می‌کنند؟
 
 <div dir="ltr" align="center">
 
 <table style="border-collapse:collapse;margin:auto"><tr><th></th><th style="font-size:12px;color:#666">c0</th><th style="font-size:12px;color:#666">c1</th><th style="font-size:12px;color:#666">c2</th><th style="font-size:12px;color:#666">c3</th><th style="font-size:12px;color:#666">c4</th></tr><tr><th style="font-size:12px;color:#666">r0</th><td style="background:#ffd48a;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>2</b><br><small style="opacity:.75">10−8</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#e8f7e8;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>0</b><br><small style="opacity:.75">6−6</small></td><td style="background:#e8f7e8;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>0</b><br><small style="opacity:.75">5−5</small></td><td style="background:#e8f7e8;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>0</b><br><small style="opacity:.75">4−4</small></td></tr><tr><th style="font-size:12px;color:#666">r1</th><td style="background:#ffd48a;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>2</b><br><small style="opacity:.75">9−7</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#e8f7e8;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>0</b><br><small style="opacity:.75">5−5</small></td><td style="background:#e8f7e8;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>0</b><br><small style="opacity:.75">4−4</small></td><td style="background:#e8f7e8;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>0</b><br><small style="opacity:.75">3−3</small></td></tr><tr><th style="font-size:12px;color:#666">r2</th><td style="background:#ffd48a;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>2</b><br><small style="opacity:.75">8−6</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#e8f7e8;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>0</b><br><small style="opacity:.75">4−4</small></td><td style="background:#e8f7e8;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>0</b><br><small style="opacity:.75">3−3</small></td><td style="background:#e8f7e8;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>0</b><br><small style="opacity:.75">2−2</small></td></tr><tr><th style="font-size:12px;color:#666">r3</th><td style="background:#ffd48a;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>2</b><br><small style="opacity:.75">7−5</small></td><td style="background:#ffd48a;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>2</b><br><small style="opacity:.75">6−4</small></td><td style="background:#ffd48a;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>2</b><br><small style="opacity:.75">5−3</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#e8f7e8;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>0</b><br><small style="opacity:.75">1−1</small></td></tr><tr><th style="font-size:12px;color:#666">r4</th><td style="background:#ff9f7a;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>4</b><br><small style="opacity:.75">8−4</small></td><td style="background:#ff9f7a;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>4</b><br><small style="opacity:.75">7−3</small></td><td style="background:#ff9f7a;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>4</b><br><small style="opacity:.75">6−2</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#e8f7e8;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>0</b><br><small style="opacity:.75">0−0</small></td></tr></table>
 
-<p align="center"><i>اختلاف h*(n) − h<sub>M</sub>(n): سبز = برآورد دقیق؛ هرچه نارنجی‌تر، برآورد خوش‌بینانه‌تر</i></p>
+<p align="center"><i> h*(n) − h<sub>M</sub>(n) : سبز = برآورد دقیق؛ هرچه نارنجی‌تر، برآورد خوش‌بینانه‌تر</i></p>
 
 </div>
 
-- عدد ۰: منهتن دقیق است ($h_M = h^*$).
+- عدد ۰: منهتن دقیق است
 - عدد ۲ در ستون ۰: دیوار ستون ۱ راه را ۲ واحد بلندتر کرده، ولی منهتن آن را نمی‌بیند. عدد ۲ در $(3,1)$ و $(3,2)$ هم به‌خاطر دیوار $(3,3)$ است (باید بالا رفت و دور زد).
 - عدد ۴ در ردیف ۴ (ستون‌های ۰ تا ۲): آنجا دیوارهای $(3,3)$ و $(4,3)$ مانع‌اند و باید به بالا برگشت و دور زد.
 
 کد این جلسه روی شبکه راهروهای بیمارستان، $h^*(n)$ را با همان ایده UCS جلسه ۶ (Dijkstra از سمت هدف) محاسبه می‌کند و برای هر گره آزمون مجاز بودن و ثبات را اجرا می‌کند. بخشی از خروجی واقعی:
 
-| گره | $h^*$ | $h_M$ | $h_E$ | $2h_M$ | مجاز؟ M و E و 2M |
-|---|---|---|---|---|---|
-| (0,0) | 10 | 8 | 5.66 | 16 | بله، بله، خیر |
-| (2,0) | 8 | 6 | 4.47 | 12 | بله، بله، خیر |
-| (3,0) | 7 | 5 | 4.12 | 10 | بله، بله، خیر |
-| (3,2) | 5 | 3 | 2.24 | 6 | بله، بله، خیر |
-| (4,0) | 8 | 4 | 4 | 8 | بله، بله، بله |
-| (4,2) | 6 | 2 | 2 | 4 | بله، بله، بله |
+<div dir="ltr">
 
-خلاصهٔ آزمون روی هر ۲۰ خانهٔ باز: $h_M$ و $h_E$ در **هر ۲۰ خانه** مجازند؛ اما $2h_M$ فقط در **۴ خانه** مجاز است: $(4,0)$، $(4,1)$، $(4,2)$ و $(4,4)$.
+| گره | $h^*$ | $h_M$ | $h_E$ | $2h_M$ | 2M / E / M مجاز؟ |
+|--:|--:|--:|--:|--:|:-:|
+| (0,0) | 10 | 8 | 5.66 | 16 | بله / بله / خیر |
+| (2,0) | 8 | 6 | 4.47 | 12 | بله / بله / خیر |
+| (3,0) | 7 | 5 | 4.12 | 10 | بله / بله / خیر |
+| (3,2) | 5 | 3 | 2.24 | 6 | بله / بله / خیر |
+| (4,0) | 8 | 4 | 4 | 8 | بله / بله / بله |
+| (4,2) | 6 | 2 | 2 | 4 | بله / بله / بله |
 
-دو مشاهده مهم:
-1. در $(0,0)$ داریم $h_M = 8 < h^* = 10$. چرا؟ چون راهروهای ستون ۱ بسته‌اند و مسیر واقعی مجبور به دور زدن است. هیوریستیک دیوارها را نمی‌بیند، پس خوش‌بینانه کم تخمین می‌زند — و همین یعنی مجاز.
-2. $2h_M$ در بیشتر گره‌ها مجاز نیست (مثلاً $16 > 10$ در شروع)، اما در $(4,0)$ مجاز است و همچنان **ناثابت**: همسایه $(4,1)$ را ببینید که $h(4,1) = 6$ است و $8 > 1 + 6$. پس مجاز بودن و ثبات دو شرط مستقل‌اند.
+</div>
+
+خلاصهٔ آزمون روی هر ۲۰ خانهٔ باز: $h_M$ و $h_E$ در **هر ۲۰ خانه** مجازند؛ اما $2h_M$ فقط در **۴ خانه** مجاز است:
+
+<div dir="ltr" align="center">
+
+ $(4,0)$، $(4,1)$، $(4,2)$ و $(4,4)$
+
+</div>
+
+مشاهده مهم:
+1. 2hM در بیشتر گره‌ها مجاز نیست (مثلاً 16 > 10 در شروع)، اما در (4,0) مجاز است ولی ناثابت: همسایه (4,1) را ببینید که h(4,1) = 6 است و 8 > 1 + 6. پس مجاز بودن و ثبات دو شرط مستقل‌اند.
 
 ### ۴.۴ بررسی گام‌به‌گام ثبات
 
-**منهتن روی یال $(3,0) \to (3,1)$:** $h_M(3,0)=5$ و $h_M(3,1)=4$ و $c=1$. آزمون: $5 \le 1 + 4 = 5$ ✓ (برقرار، با تساوی).
+<div dir="ltr">
 
-**منهتن روی یال $(3,0) \to (2,0)$:** $h_M(2,0)=6$. آزمون: $5 \le 1+6 = 7$ ✓.
+**Manhattan on edge $(3,0) \to (3,1)$:**	$h_M(3,0)=5$	and	 $h_M(3,1)=4$	and	 $c=1$	 *➔* 	$5 \le 1 + 4 = 5$ **✓**(Equal)
 
-**اقلیدسی روی یال $(3,0) \to (3,1)$:** $4.12 \le 1 + 3.16 = 4.16$ ✓ (فقط کمی فاصله دارد!).
+**Euclidean on edge $(3,0) \to (3,1)$:**	$4.12 \le 1 + 3.16 = 4.16$ **✓** (Only a little difference!)
 
-**$2h_M$ روی یال $(4,0) \to (4,1)$:** $h(4,0)=8$ و $h(4,1)=6$. آزمون: $8 \le 1 + 6 = 7$؟ ✗ — **نقض ثبات**.
+**$2h_M$ on edge $(4,0) \to (4,1)$:**	$h(4,0)=8$	and	$h(4,1)=6$	*➔*	$8 \le 1 + 6 = 7$ ✗ (Not Consistent)
+
+</div>
 
 > [!TIP]
 > **میان‌بر:** وقتی همهٔ هزینه‌ها ۱ است، منهتن با هر قدم دقیقاً ۱ واحد تغییر می‌کند (یا ۱ کم، یا ۱ زیاد). پس همیشه $h(n)\le 1+h(n')$ و منهتن روی این شبکه **ثابت** است. برای اقلیدسی هم نامساوی مثلث کافی است: طول یک قدم ۱ است و فاصلهٔ مستقیم با یک قدم بیشتر از ۱ تغییر نمی‌کند. (در این شبکه، هر دو در هر ۲۰ خانه و روی همهٔ یال‌ها آزمون شده‌اند.)
 
 ### ۴.۵ مجاز و ثابت دو شرط «مستقل» اما مرتبط‌اند
+
+<div dir="ltr" align="center">
 
 ```mermaid
 flowchart TB
@@ -349,12 +383,13 @@ flowchart TB
     end
 ```
 
-- هر **ثابت** ⟹ **مجاز**.
-- هر مجازی ثابت نیست. **نمونهٔ کوچک (سراسری):** گراف $S \xrightarrow{1} A \xrightarrow{3} G$ و $h(S)=4$، $h(A)=0$، $h(G)=0$.
-  - مجاز: $h(S)=4 \le h^*(S)=4$ و $h(A)=0 \le 3$ ✓
-  - ثابت؟ $h(S)=4 \le 1 + h(A) = 1$؟ ✗
+**ثابت** ⟹ **مجاز**.
+
+</div>
 
 ### ۴.۶ چک‌لیست آزمون یک هیوریستیک
+
+<div dir="ltr" align="center">
 
 ```mermaid
 flowchart TD
@@ -367,7 +402,10 @@ flowchart TD
     F -- خیر --> H["مجاز است ولی ناثابت"]
 ```
 
+</div>
+
 **چرا اهمیت دارد؟**
+
 - مجاز بودن شرط تضمین بهینگی در *A است (جلسه ۸).
 - ثبات باعث می‌شود هر گره در*A حداکثر یک بار بسط داده شود.
 
@@ -375,11 +413,10 @@ flowchart TD
 > هیوریستیک بیش‌برآورد خطرناک است چون الگوریتم را از مسیرهای خوب دور می‌کند. در جلسه ۸ می‌بینیم که با $h$ غیرمجاز، تضمین بهینگی *A از بین می‌رود.
 
 ### ۴.۷ اشتباهات رایج
-- **«$h$ بزرگ‌تر همیشه بهتر است.»** نه؛ تا وقتی $h \le h^*$ است. بعد از آن بیش‌برآورد می‌شود.
-- **«در منهتن و اقلیدسی کدام بهتر است؟»** هر دو مجازند. چون $h_M \ge h_E$ و هر دو $\le h^*$، منهتن «آگاه‌تر» است (به $h^*$ نزدیک‌تر).
+- **«$h$ بزرگ‌تر همیشه بهتر است.»** نه؛ ممکن است منجر به بیش‌برآورد و نقض ثبات شود.
 - **«اگر $h$ مجاز باشد، Greedy بهینه می‌شود.»** نه! بخش ۵ را ببینید.
-- **جابه‌جا کردن ردیف و ستون** در مختصات؛ همیشه $(ردیف, ستون)$.
-- **فراموش کردن قاعدهٔ شکستن تساوی** در ردیابی دستی؛ نتیجهٔ Greedy به آن حساس است.
+- **جابه‌جا کردن ردیف و ستون** ✗؛ همیشه (ستون ,ردیف).
+- **فراموش کردن قاعدهٔ شکستن تساوی (قانون انتخاب بین گره های با هزینه های برابر)** در ردیابی دستی؛ نتیجهٔ Greedy به آن حساس است.
 
 ---
 
@@ -388,23 +425,25 @@ flowchart TD
 ### ۵.۱ ایده
 ایده ساده است: همیشه گره‌ای را بسط بده که $h(n)$ کمتری دارد. صف اولویت فقط با $h(n)$ مرتب می‌شود؛ $g(n)$ (هزینه تا الان) در انتخاب نقشی ندارد.
 
-تمثیل: مسافری که **فقط به تابلوی «تا هدف X کیلومتر»** نگاه می‌کند و هرگز به کیلومترشمار (هزینه‌ای که تا حالا داده) نگاه نمی‌کند. اگر تابلو او را به یک جادهٔ پرعوارض و طولانی هدایت کند، همان را می‌رود.
+تمثیل: مسافری که **فقط به تابلوی «تا هدف X کیلومتر»** نگاه می‌کند و هرگز به کیلومترشمار (هزینه‌ای که تا حالا داده) نگاه نمی‌کند.
 
 ### ۵.۲ شبه‌کد و نمودار
 
 ```
 GREEDY(start, goal, h):
-    OPEN   ← صف اولویت (کلید = h)   ;  start را وارد کن
+    OPEN ← Priority Queue (priority = h)
+    OPEN.insert(start)
     parent[start] ← None
-    while OPEN خالی نیست:
-        n ← گرهٔ با کمترین h از OPEN
-        n را «بسط‌یافته» علامت بزن
-        if n == goal:  return مسیر از طریق parent
-        for هر همسایه m از n:
-            if m هنوز دیده نشده:            # نه در OPEN و نه بسط‌یافته
+    while OPEN is not empty:
+        n ← node with the lowest h value in OPEN
+        mark n as EXPANDED
+        if n == goal:
+            return reconstruct_path(parent, goal)
+        for each neighbor m of n:
+            if m has not been visited:
                 parent[m] ← n
-                m را با اولویت h(m) وارد OPEN کن
-    return شکست
+                OPEN.insert(m, priority = h(m))
+    return FAILURE
 ```
 
 ```mermaid
@@ -432,9 +471,19 @@ flowchart LR
     B -- "3" --> G
 ```
 
-**آیا $h$ مجاز است؟** $h^*(S)=5$، $h^*(A)=5$، $h^*(B)=3$. پس $4\le5$ و $1\le5$ و $3\le3$ ✓ مجاز است (و ثابت هم هست).
+**آیا $h$ مجاز است؟** 
+
+<div dir="ltr" align="center">
+
+$$h(S)=4\leq5=h^*(S),\quad h(A)=1\leq5=h^*(A),\quad h(B)=3\leq3=h^*(B)\Rightarrow \text{Admissible}$$
+
+</div>
+
+✓ مجاز است (و ثابت هم هست).
 
 **اجرای Greedy:**
+
+<div dir="ltr">
 
 | گام | بسط‌یافته | همسایه‌های جدید (h) | OPEN |
 |---|---|---|---|
@@ -442,16 +491,20 @@ flowchart LR
 | ۲ | $A$ (کمترین $h$) | $G(0)$ | $G:0$ ، $B:3$ |
 | ۳ | $G$ | هدف! | — |
 
-مسیر Greedy: $S \to A \to G$ با هزینهٔ $5+5=10$.
-مسیر بهینه: $S \to B \to G$ با هزینهٔ $2+3=5$.
+</div>
 
-**درس:** Greedy فقط عدد کوچک $h(A)=1$ را دید و هزینهٔ سنگین یال $S\to A$ (۵ واحد) را نادیده گرفت. هیوریستیک **مجاز و ثابت** بود و باز هم نتیجه بهینه نشد.
+مسیر Greedy: $G \to A \to S$ با هزینهٔ $5+5=10$.
+مسیر بهینه: $G \to B \to S$ با هزینهٔ $2+3=5$.
+
+**درس:** Greedy فقط عدد کوچک $h(A)=1$ را دید و هزینهٔ سنگین یال $A\to S$ (۵ واحد) را نادیده گرفت. هیوریستیک **مجاز و ثابت** بود و باز هم نتیجه بهینه نشد.
 
 ### ۵.۴ مثال گام‌به‌گام ۲: Greedy با منهتن روی شبکهٔ بیمارستان
-قاعده‌ها: ترتیب همسایه‌ها پایین، بالا، راست، چپ؛ تساوی FIFO.
+قاعده‌ها: ترتیب همسایه‌ها پایین، بالا، راست، چپ؛ قاعده تساوی: FIFO.
+
+<div dir="ltr">
 
 | گام | گرهٔ بسط‌یافته | $h_M$ | همسایه‌های جدید | OPEN بعد از گام (مرتب بر اساس $h$) |
-|---|---|---|---|---|
+|:-:|:-:|:-:|:--|:--|
 | ۱ | $(0,0)$ | 8 | $(1,0)=7$ | $(1,0){:}7$ |
 | ۲ | $(1,0)$ | 7 | $(2,0)=6$ | $(2,0){:}6$ |
 | ۳ | $(2,0)$ | 6 | $(3,0)=5$ | $(3,0){:}5$ |
@@ -467,15 +520,19 @@ flowchart LR
 | ۱۳ | $(3,4)$ | 1 | $(4,4)=0$ | $(4,4){:}0$ ، … |
 | ۱۴ | $(4,4)$ | 0 | — | **هدف!** |
 
-<div dir="ltr" align="center">
-
-<table style="border-collapse:collapse;margin:auto"><tr><th></th><th style="font-size:12px;color:#666">c0</th><th style="font-size:12px;color:#666">c1</th><th style="font-size:12px;color:#666">c2</th><th style="font-size:12px;color:#666">c3</th><th style="font-size:12px;color:#666">c4</th></tr><tr><th style="font-size:12px;color:#666">r0</th><td style="background:#7cc4ff;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>1</b><br><small style="opacity:.75">h=8</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#fff;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"></td><td style="background:#fff;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"></td><td style="background:#fff;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"></td></tr><tr><th style="font-size:12px;color:#666">r1</th><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>2</b><br><small style="opacity:.75">h=7</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#e6e6e6;color:#555;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">؟<br><small style="opacity:.75">h=5</small></td><td style="background:#e6e6e6;color:#555;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">؟<br><small style="opacity:.75">h=4</small></td><td style="background:#e6e6e6;color:#555;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">؟<br><small style="opacity:.75">h=3</small></td></tr><tr><th style="font-size:12px;color:#666">r2</th><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>3</b><br><small style="opacity:.75">h=6</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>10</b><br><small style="opacity:.75">h=4</small></td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>11</b><br><small style="opacity:.75">h=3</small></td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>12</b><br><small style="opacity:.75">h=2</small></td></tr><tr><th style="font-size:12px;color:#666">r3</th><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>4</b><br><small style="opacity:.75">h=5</small></td><td style="background:#f4a3a3;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>9</b><br><small style="opacity:.75">h=4<br>بن‌بست</small></td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>8</b><br><small style="opacity:.75">h=3</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>13</b><br><small style="opacity:.75">h=1</small></td></tr><tr><th style="font-size:12px;color:#666">r4</th><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>5</b><br><small style="opacity:.75">h=4</small></td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>6</b><br><small style="opacity:.75">h=3</small></td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>7</b><br><small style="opacity:.75">h=2</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#8be28b;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>14</b><br><small style="opacity:.75">h=0</small></td></tr></table>
-
-<p align="center"><i>Greedy با Manhattan: عدد بزرگ = ترتیب بسط. 🟨 مسیر نهایی (هزینه ۱۲)، 🟥 بسط‌یافته ولی خارج از مسیر، خاکستری = در OPEN مانده</i></p>
-
 </div>
 
-**تحلیل نقطهٔ بحرانی (گام ۴):** در $(3,0)$ دو همسایه $(4,0)$ و $(3,1)$ هر دو $h = 4$ دارند؛ صف ترتیب ورود را ملاک می‌گیرد و $(4,0)$ انتخاب می‌شود.
+<div dir="ltr" align="center">
+
+
+<table style="border-collapse:collapse;margin:auto"><tr><th></th><th style="font-size:12px;color:#666">c0</th><th style="font-size:12px;color:#666">c1</th><th style="font-size:12px;color:#666">c2</th><th style="font-size:12px;color:#666">c3</th><th style="font-size:12px;color:#666">c4</th></tr><tr><th style="font-size:12px;color:#666">r0</th><td style="background:#7cc4ff;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>1</b><br><small style="opacity:.75">h=8</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#fff;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"></td><td style="background:#fff;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"></td><td style="background:#fff;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"></td></tr><tr><th style="font-size:12px;color:#666">r1</th><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>2</b><br><small style="opacity:.75">h=7</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#e6e6e6;color:#555;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">؟<br><small style="opacity:.75">h=5</small></td><td style="background:#e6e6e6;color:#555;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">؟<br><small style="opacity:.75">h=4</small></td><td style="background:#e6e6e6;color:#555;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">؟<br><small style="opacity:.75">h=3</small></td></tr><tr><th style="font-size:12px;color:#666">r2</th><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>3</b><br><small style="opacity:.75">h=6</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>10</b><br><small style="opacity:.75">h=4</small></td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>11</b><br><small style="opacity:.75">h=3</small></td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>12</b><br><small style="opacity:.75">h=2</small></td></tr><tr><th style="font-size:12px;color:#666">r3</th><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>4</b><br><small style="opacity:.75">h=5</small></td><td style="background:#f4a3a3;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>9</b><br><small style="opacity:.75">h=4<br>بن‌بست</small></td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>8</b><br><small style="opacity:.75">h=3</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>13</b><br><small style="opacity:.75">h=1</small></td></tr><tr><th style="font-size:12px;color:#666">r4</th><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>5</b><br><small style="opacity:.75">h=4</small></td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>6</b><br><small style="opacity:.75">h=3</small></td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>7</b><br><small style="opacity:.75">h=2</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#8be28b;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>14</b><br><small style="opacity:.75">h=0</small></td></tr></table>
+</div>
+
+<div dir="rtl" align="center">
+<p align="center"><i>Greedy با Manhattan: عدد بزرگ = ترتیب بسط. 🟨 مسیر نهایی (هزینه ۱۲)، 🟥 بسط‌یافته ولی خارج از مسیر، خاکستری = در OPEN مانده</i></p>
+</div>
+
+**تحلیل نقطهٔ بحرانی (گام ۴):** دو همسایه $4 = h$ دارند؛ صف ترتیب ورود را ملاک می‌گیرد و $(0,4)$ انتخاب می‌شود.
 
 ```mermaid
 flowchart TD
@@ -485,12 +542,14 @@ flowchart TD
     B -- "میان‌بر مستقیم به (3,2) ← مسیر ۱۰تایی" --> Y["دیرتر دیده می‌شود"]
 ```
 
-سپس حریصانه مجبور می‌شود از $(4,2)$ دوباره بالا برگردد و مسیر ۱۲تایی پیدا کند، در حالی که میان‌بر $(3,1)$ مسیر ۱۰تایی می‌داد. در گام ۹ گرهٔ $(3,1)$ بالاخره بسط داده می‌شود، اما $(3,2)$ قبلاً از $(4,2)$ کشف شده و parent آن عوض نمی‌شود. به همین دلیل میان‌بر هرگز استفاده نمی‌شود.
+سپس حریصانه مجبور می‌شود از $(2,4)$ دوباره بالا برگردد و مسیر ۱۲تایی پیدا کند، در حالی که میان‌بر $(1,3)$ مسیر ۱۰تایی می‌داد. در گام ۹ گرهٔ $(1,3)$ بالاخره بسط داده می‌شود، اما $(2,3)$ قبلاً از $(2,4)$ کشف شده و parent آن عوض نمی‌شود. به همین دلیل میان‌بر هرگز استفاده نمی‌شود.
 
 ### ۵.۵ مثال گام‌به‌گام ۳: Greedy با اقلیدسی
 
+<div dir="ltr">
+
 | گام | گرهٔ بسط‌یافته | $h_E$ | همسایه‌های جدید | OPEN بعد از گام |
-|---|---|---|---|---|
+|:-:|:-:|:-:|---|---|
 | ۱ | $(0,0)$ | 5.66 | $(1,0)=5.00$ | $(1,0){:}5.00$ |
 | ۲ | $(1,0)$ | 5.00 | $(2,0)=4.47$ | $(2,0){:}4.47$ |
 | ۳ | $(2,0)$ | 4.47 | $(3,0)=4.12$ | $(3,0){:}4.12$ |
@@ -504,15 +563,21 @@ flowchart TD
 | ۱۱ | $(3,4)$ | 1.00 | $(4,4)=0$ | $(4,4){:}0$ ، … |
 | ۱۲ | $(4,4)$ | 0 | — | **هدف!** |
 
+</div>
+
 <div dir="ltr" align="center">
+
 
 <table style="border-collapse:collapse;margin:auto"><tr><th></th><th style="font-size:12px;color:#666">c0</th><th style="font-size:12px;color:#666">c1</th><th style="font-size:12px;color:#666">c2</th><th style="font-size:12px;color:#666">c3</th><th style="font-size:12px;color:#666">c4</th></tr><tr><th style="font-size:12px;color:#666">r0</th><td style="background:#7cc4ff;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>1</b><br><small style="opacity:.75">h=5.66</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#fff;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"></td><td style="background:#fff;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"></td><td style="background:#fff;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"></td></tr><tr><th style="font-size:12px;color:#666">r1</th><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>2</b><br><small style="opacity:.75">h=5</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#e6e6e6;color:#555;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">؟<br><small style="opacity:.75">h=3.61</small></td><td style="background:#e6e6e6;color:#555;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">؟<br><small style="opacity:.75">h=3.16</small></td><td style="background:#e6e6e6;color:#555;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">؟<br><small style="opacity:.75">h=3</small></td></tr><tr><th style="font-size:12px;color:#666">r2</th><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>3</b><br><small style="opacity:.75">h=4.47</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>8</b><br><small style="opacity:.75">h=2.83</small></td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>9</b><br><small style="opacity:.75">h=2.24</small></td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>10</b><br><small style="opacity:.75">h=2</small></td></tr><tr><th style="font-size:12px;color:#666">r3</th><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>4</b><br><small style="opacity:.75">h=4.12</small></td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>5</b><br><small style="opacity:.75">h=3.16</small></td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>6</b><br><small style="opacity:.75">h=2.24</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>11</b><br><small style="opacity:.75">h=1</small></td></tr><tr><th style="font-size:12px;color:#666">r4</th><td style="background:#e6e6e6;color:#555;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">؟<br><small style="opacity:.75">h=4</small></td><td style="background:#e6e6e6;color:#555;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">؟<br><small style="opacity:.75">h=3</small></td><td style="background:#f4a3a3;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>7</b><br><small style="opacity:.75">h=2<br>بن‌بست</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#8be28b;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>12</b><br><small style="opacity:.75">h=0</small></td></tr></table>
 
-<p align="center"><i>Greedy با Euclidean: ۱۲ بسط و مسیر با هزینه ۱۰</i></p>
+</div>
+
+<div dir="rtl" align="center">
+<p align="center"><i>Greedy با Euclidean: دوازده بسط و مسیر با هزینه ۱۰</i></p>
 
 </div>
 
-اقلیدسی در گام ۴ اتفاقاً $(3,1)$ را ترجیح می‌دهد (چون ۳٫۱۶ از ۴٫۰۰ کمتر است) و همین باعث می‌شود مسیر بهینه ۱۰ پیدا شود. این **شانس** است، نه هوش بیشتر؛ اگر دیوارها جای دیگری بودند، اقلیدسی هم ممکن بود خطا کند.
+اقلیدسی در گام ۴ $(1,3)$ را ترجیح می‌دهد (چون ۳٫۱۶ از ۴٫۰۰ کمتر است) و همین باعث می‌شود مسیر بهینه ۱۰ پیدا شود. این **شانس** است، نه هوش بیشتر؛ اگر دیوارها جای دیگری بودند، اقلیدسی هم ممکن بود خطا کند.
 
 ### ۵.۶ نتیجهٔ مقایسه و حساسیت به تساوی
 نتیجه اجرای کد این جلسه روی شبکه بیمارستان:
@@ -523,18 +588,10 @@ flowchart TD
 | Euclidean | 10 | 12 | بله (اتفاقی) |
 | 2×Manhattan | 12 | 14 | خیر |
 
-**مقایسهٔ تصویری مسیرها (Manhattan):**
 
-<div dir="ltr" align="center">
-
-<table style="border-collapse:collapse;margin:auto"><tr><th></th><th style="font-size:12px;color:#666">c0</th><th style="font-size:12px;color:#666">c1</th><th style="font-size:12px;color:#666">c2</th><th style="font-size:12px;color:#666">c3</th><th style="font-size:12px;color:#666">c4</th></tr><tr><th style="font-size:12px;color:#666">r0</th><td style="background:#7cc4ff;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>🚑</b></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#fff;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"></td><td style="background:#fff;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"></td><td style="background:#fff;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"></td></tr><tr><th style="font-size:12px;color:#666">r1</th><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">●<br><small style="opacity:.75">هر دو</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#fff;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"></td><td style="background:#fff;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"></td><td style="background:#fff;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"></td></tr><tr><th style="font-size:12px;color:#666">r2</th><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">●<br><small style="opacity:.75">هر دو</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">●<br><small style="opacity:.75">هر دو</small></td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">●<br><small style="opacity:.75">هر دو</small></td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">●<br><small style="opacity:.75">هر دو</small></td></tr><tr><th style="font-size:12px;color:#666">r3</th><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">●<br><small style="opacity:.75">هر دو</small></td><td style="background:#a7e3a7;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">B<br><small style="opacity:.75">بهینه</small></td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">●<br><small style="opacity:.75">هر دو</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#ffd166;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">●<br><small style="opacity:.75">هر دو</small></td></tr><tr><th style="font-size:12px;color:#666">r4</th><td style="background:#f4a3a3;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">G<br><small style="opacity:.75">Greedy</small></td><td style="background:#f4a3a3;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">G<br><small style="opacity:.75">Greedy</small></td><td style="background:#f4a3a3;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">G<br><small style="opacity:.75">Greedy</small></td><td style="background:#2b2b2b;color:#777;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px">■</td><td style="background:#8be28b;color:#111;border:1px solid #999;width:62px;height:54px;text-align:center;vertical-align:middle;font-size:15px"><b>🏥</b></td></tr></table>
-
-<p align="center"><i>مقایسه مسیرها: G فقط Greedy، B فقط بهینه، ● مشترک. Greedy از جای دیگری رفته است</i></p>
-
-</div>
 
 دو نکتهٔ مهم:
-1. **Greedy فقط «ترتیب» $h$ را می‌بیند، نه اندازهٔ آن.** چون $2h_M$ و $h_M$ ترتیب گره‌ها را یکسان می‌کنند، Greedy با هر دو **دقیقاً یک نتیجه** می‌دهد (۱۲ و ۱۴). ضرب‌کردن $h$ در عدد مثبت، Greedy را عوض نمی‌کند؛ اما برای *A مجاز بودن را خراب می‌کند.
+1. **Greedy فقط «ترتیب» $h$ را می‌بیند، نه اندازهٔ آن.** ضرب‌کردن $h$ در عدد مثبت، Greedy را عوض نمی‌کند؛ اما برای *A مجاز بودن را خراب می‌کند.
 2. **حساسیت به شکستن تساوی.** اگر ترتیب همسایه‌ها را «راست، پایین، بالا، چپ» بگذاریم (به‌جای ترتیب پیش‌فرض)، همین Manhattan مسیر ۱۰ پیدا می‌کند (با ۱۴ بسط). یعنی بهینه‌شدن یا نشدن Greedy گاهی به یک قرارداد بی‌اهمیت وابسته است؛ این یعنی تضمینی در کار نیست.
 
 **نتیجه:** Greedy سریع و هدفمند است اما تضمین بهینه بودن ندارد — حتی وقتی هیوریستیک مجاز است. علت: $g(n)$ را نادیده می‌گیرد و مسیر پیموده‌شده گران ممکن است پنهان بماند. راه‌حل این مشکل، ترکیب $g$ و $h$ در الگوریتم *A است که موضوع جلسه ۸ است.
@@ -552,7 +609,7 @@ flowchart TD
 ---
 
 ## ۶. پیش‌نمایش جلسهٔ ۸: با اضافه‌کردن $g$ چه می‌شود؟
-اگر کلید صف را از $h(n)$ به $f(n)=g(n)+h(n)$ تغییر دهیم، A* را ساخته‌ایم. روی همین شبکه (با همان قواعد) نتیجه اینگونه است:
+اگر کلید صف را از $h(n)$ به $f(n)=g(n)+h(n)$ تغییر دهیم، *A را ساخته‌ایم. روی همین شبکه (با همان قواعد) نتیجه اینگونه است:
 
 | الگوریتم | هزینه مسیر | گره‌های بسط‌یافته | بهینه؟ |
 |---|---|---|---|
@@ -570,10 +627,7 @@ Greedy + M   ██████████████       14         12  NOT
 Greedy + E   ████████████         12         10  optimal (by luck)
 ```
 
-> [!NOTE]
-> تعداد بسط UCS به ترتیب شکستن تساوی وابسته است (اینجا همهٔ ۲۰ خانهٔ باز بسط داده شد). نکتهٔ مهم برای A*: وقتی مسیر $f$ را دنبال می‌کند، مقدار $f$ از ۸ به ۱۰ می‌پرد؛ یعنی A* «می‌فهمد» که دیوارها دو واحد هزینه اضافه کرده‌اند و پیش از قبول مسیر گران، مسیرهای دیگر را هم می‌سنجد. Greedy هیچ‌وقت چنین چیزی نمی‌فهمد.
 
-این پیش‌نمایش بدون اثبات است؛ در جلسه ۸ جزئیات و دلیل تضمین بهینگی را می‌بینیم.
 
 ---
 
@@ -581,75 +635,37 @@ Greedy + E   ████████████         12         10  optimal
 **مسیریابی آمبولانس (مثال آموزشی):** در سامانه‌های اعزام آمبولانس، نقشه شهر تقریباً شبکه‌ای است و فاصله بین محل حادثه و بیمارستان، یک هیوریستیک طبیعی است. چند نکته:
 - **فاصلهٔ اقلیدسی (خط مستقیم)** در شبکهٔ واقعی جاده‌ها مجاز است، چون هیچ مسیر واقعی کوتاه‌تر از خط مستقیم نیست.
 - **فاصلهٔ منهتن** فقط وقتی مجاز است که خیابان‌ها واقعاً چهارجهته و بدون اریب باشند؛ در شهرهایی با خیابان‌های مورب می‌تواند بیش‌برآورد کند.
-- موانع واقعی (ترافیک، خیابان‌های مسدود، راهرو بسته بیمارستان) باعث می‌شوند $h^*$ بزرگ‌تر از $h$ شود؛ هرچه تفاوت بیشتر، جست‌وجو کمتر هدایت می‌شود (همان شکل «اختلاف $h^*-h_M$» در بخش ۴.۳).
+- موانع واقعی (ترافیک، خیابان‌های مسدود، راهرو بسته بیمارستان) باعث می‌شوند *h بزرگ‌تر از h شود؛ هرچه تفاوت بیشتر، جست‌وجو کمتر هدایت می‌شود (همان شکل اختلاف دو فاصله در بخش ۴.۳).
 - اگر به‌جای مسافت، **زمان** معیار هزینه باشد، هیوریستیک مبتنی بر مسافت دیگر لزوماً برآورد درستی از هزینه نیست. یک راه مجاز: فاصلهٔ مستقیم تقسیم بر **بیشینهٔ سرعت ممکن** در شبکه.
 
 **نمونهٔ دیگر:** ربات‌های خدماتی که دارو یا نمونه آزمایشگاهی را در راهروهای بیمارستان حمل می‌کنند دقیقاً همین مسئله را حل می‌کنند: شبکهٔ راهروها، هزینهٔ حرکت و هدفی مثل بخش یا آزمایشگاه.
 
 > [!WARNING]
-> این مثال صرفاً برای آموزش مفهوم هیوریستیک است. سامانه واقعی اعزام آمبولانس به نقشه به‌روز، مجوزها و پروتکل‌های اورژانس وابسته است و خروجی چنین مثال‌هایی هیچ کاربرد تشخیصی یا بالینی ندارد.
+> این مثال صرفاً برای آموزش مفهوم هیوریستیک است. سامانه واقعی اعزام آمبولانس به نقشه به‌روز، مجوزها و پروتکل‌های اورژانس وابسته است.
 
 ---
 
 ## ✍️ فعالیت کلاسی
 
-### فعالیت ۱: محاسبه و آزمون هیوریستیک
-روی همان شبکه ۵×۵ جلسه (خانه‌های بسته: ستون ۱ در ردیف‌های ۰ تا ۲ و خانه‌های $(3,3)$ و $(4,3)$) و هدف $(4,4)$:
-
-۱. $h_M$ و $h_E$ را برای گره‌های $(2,0)$ و $(4,2)$ دستی محاسبه کنید.
-
-۲. با مقدار واقعی $h^*$ داده‌شده در جدول زیر، مجاز بودن هر سه هیوریستیک $h_M$ و $h_E$ و $2h_M$ را در این دو گره تعیین کنید.
-
-| گره | $h^*(n)$ |
-|---|---|
-| (2,0) | 8 |
-| (4,2) | 6 |
-
-۳. برای گره $(4,0)$ نشان دهید $2h_M$ مجاز است اما ناثابت (همسایه $(4,1)$ با هزینه یال ۱ را بررسی کنید).
-
-<details>
-<summary>کلید پاسخ فعالیت ۱ (نمونه)</summary>
-
-۱. گره $(2,0)$: $h_M = 4 + 2 = 6$ و $h_E = \sqrt{16+4} \approx 4.47$. گره $(4,2)$: $h_M = 0 + 2 = 2$ و $h_E = 2$.
-
-۲. در $(2,0)$: $h_M = 6 \le 8$ مجاز، $h_E \approx 4.47 \le 8$ مجاز، $2h_M = 12 > 8$ غیرمجاز. در $(4,2)$: $h_M = 2 \le 6$ مجاز، $h_E = 2 \le 6$ مجاز، $2h_M = 4 \le 6$ مجاز.
-
-۳. در $(4,0)$: $2h_M = 8$ و $h^* = 8$ پس مجاز است؛ اما برای همسایه $(4,1)$ داریم $h(4,1) = 6$ و چون $8 > 1 + 6$، شرط ثبات برقرار نیست.
-
-</details>
-
-### فعالیت ۲: بحث
+### فعالیت ۱:  بحث
 در بیمارستان، کدام هیوریستیک مناسب‌تر است: منهتن یا اقلیدسی؟ پاسخ را به «نوع حرکت مجاز در راهروها» ربط دهید.
 
 <details>
-<summary>کلید پاسخ فعالیت ۲ (نمونه)</summary>
+<summary>کلید پاسخ فعالیت ۱</summary>
 
 اگر حرکت فقط در امتداد راهروهای عمود‌به‌هم (شبیه شبکه) ممکن باشد، منهتن برآورد واقعی‌تری از حداقل حرکت است؛ فاصله اقلیدسی مسیر موربی را فرض می‌کند که در راهرو وجود ندارد و برآورد ضعیف‌تر (ولی همچنان مجاز) می‌دهد. در فضای باز (حیاط بیمارستان یا حرکت ویلچر در فضای باز) اقلیدسی معنادارتر است.
 
 </details>
 
-### فعالیت ۳: Greedy روی گراف کوچک
+### فعالیت ۲: Greedy روی گراف کوچک
 در گراف بخش ۵.۳ فرض کنید $h(A)=4$ (به‌جای ۱) و بقیهٔ مقادیر ثابت بمانند. (الف) آیا $h$ هنوز مجاز است؟ (ب) Greedy چه مسیری پیدا می‌کند؟ (پ) از این نتیجه چه می‌گیرید؟
 
 <details>
-<summary>کلید پاسخ فعالیت ۳</summary>
+<summary>کلید پاسخ فعالیت ۲</summary>
 
-(الف) $h^*(A)=5$ و $4 \le 5$، پس مجاز است. (ب) بعد از بسط $S$، مقایسه $h(A)=4$ و $h(B)=3$ نشان می‌دهد $B$ انتخاب می‌شود؛ مسیر $S\to B\to G$ با هزینه ۵ که بهینه است. (پ) بهینه‌شدن Greedy به **شانس مقدارهای $h$** بستگی دارد، نه به مجاز بودن؛ هیچ تضمینی وجود ندارد.
-
-</details>
-
-### فعالیت ۴: آزمون ثبات
-ثبات اقلیدسی را روی یال $(3,0)\to(4,0)$ بررسی کنید.
-
-<details>
-<summary>کلید پاسخ فعالیت ۴</summary>
-
-$h_E(3,0)=4.12$ و $h_E(4,0)=4.00$ و $c=1$. آزمون: $4.12 \le 1 + 4.00 = 5.00$ ✓ برقرار است.
+(الف) $h^*(A)=5$ و $4 \le 5$، پس مجاز است. (ب) بعد از بسط $S$، مقایسه $h(A)=4$ و $h(B)=3$ نشان می‌دهد $B$ انتخاب می‌شود؛ مسیر $G\to B\to S$ با هزینه ۵ که بهینه است. (پ) بهینه‌شدن Greedy به **شانس مقدارهای $h$** بستگی دارد، نه به مجاز بودن؛ هیچ تضمینی وجود ندارد.
 
 </details>
-
-### فعالیت ۵: ردیابی دستی
-جدول ردیابی Greedy-منهتن (بخش ۵.۴) را بدون نگاه‌کردن به جواب برای گام‌های ۱ تا ۴ پر کنید و توضیح دهید چرا در گام ۴ تساوی پیش می‌آید و چگونه با FIFO حل می‌شود.
 
 ---
 
@@ -671,19 +687,23 @@ python3 code/session_07_informed_heuristics.py
 
 ## 🧾 جمع‌بندی یک‌صفحه‌ای
 
+<div dir="ltr">
+
 | مفهوم | یک‌خطی |
 |---|---|
 | $h(n)$ | برآورد هزینهٔ باقی‌مانده تا هدف |
-| $h^*(n)$ | هزینهٔ واقعی باقی‌مانده؛ با BFS/Dijkstra معکوس از هدف |
-| مجاز | $h \le h^*$؛ هرگز بیش‌برآورد نکن |
-| ثابت | $h(n) \le c + h(n')$؛ شرط مثلثی؛ ثابت ⟹ مجاز |
-| منهتن / اقلیدسی | برای حرکت ۴جهته / آزاد؛ $h_E \le h_M \le h^*$ |
+| $h^*(n)$ | هزینهٔ واقعی باقی‌مانده؛ با دایکسترا یا اول-سطح معکوس از هدف |
+| مجاز | $h \le h^*$  هرگز بیش‌برآورد نکن؛ |
+| ثابت | $h(n) \le c + h(n')$ شرط مثلثی؛ ثابت ⟹ مجاز ؛|
+| منهتن / اقلیدسی | برای حرکت ۴جهته / آزاد $h_E \le h_M \le h^*$ |
 | Greedy | کلید صف فقط $h$؛ سریع ولی **غیربهینه** |
-| *A | کلید $g+h$؛ بهینه با $h$ مجاز (جلسه ۸) |
 
+</div>
 ---
 
 ## 📘 واژه‌نامه
+
+<div dir="ltr">
 
 | واژه | معنی |
 |---|---|
@@ -698,17 +718,16 @@ python3 code/session_07_informed_heuristics.py
 | Tie-breaking | شکستن تساوی؛ انتخاب بین گره‌های هم‌اولویت |
 | Relaxation | ساده‌سازی مسئله برای ساختن هیوریستیک |
 | Overestimate | بیش‌برآورد؛ $h > h^*$ |
+</div>
 
 ## ❓ پرسش‌های خودآزمون
 1. تفاوت اصلی جست‌وجوی آگاهانه و ناآگاهانه چیست؟ $h(n)$ چه نقشی دارد و آیا هزینه واقعی است؟
 2. تعریف مجاز بودن را بنویسید. چرا یک هیوریستیک بیش‌برآورد خطرناک است؟
 3. با کمک جدول بخش ۵.۶ توضیح دهید چرا Greedy حتی با هیوریستیک مجاز ممکن است مسیر غیربهینه بدهد.
-4. چگونه ممکن است یک هیوریستیک در یک گره مجاز اما ناثابت باشد؟ مثال گره $(4,0)$ با $2h_M$ را توضیح دهید.
-5. چرا Greedy با $h_M$ و $2h_M$ دقیقاً نتیجهٔ یکسان می‌دهد؟
+4. چگونه ممکن است یک هیوریستیک در یک گره مجاز اما ناثابت باشد؟
+5. چرا Greedy با $h_M$ و دو برار آن، دقیقاً نتیجهٔ یکسان می‌دهد؟
 6. در گراف بخش ۵.۳ مسیر Greedy و هزینه‌اش را بنویسید و دلیل غیربهینه‌بودن را توضیح دهید.
 7. یک مثال از هیوریستیک مجاز اما ناثابت (سراسری) بسازید.
-
-> کلید پاسخ‌ها در بخش «راهنمای مدرس» انتهای فایل آمده است.
 
 ## 📝 تکلیف
 1. کد `code/session_07_informed_heuristics.py` را اجرا کنید و جدول مقایسه سه هیوریستیک (هزینه مسیر و تعداد بسط) را گزارش کنید.
