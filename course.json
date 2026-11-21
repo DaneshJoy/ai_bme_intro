@@ -70,7 +70,7 @@
     },
     {
       "id": "session-08-a-star",
-      "title": "الگوریتم A*",
+      "title": "الگوریتم *A",
       "order": 8,
       "durationMinutes": 0,
       "objectives": [],
@@ -245,8 +245,15 @@
       "status": "published"
     }
   ],
+  "labs": [
+    {
+      "after": 8,
+      "title": "آزمایشگاه جست‌وجو روی گرید",
+      "file": "search_lab.html"
+    }
+  ],
   "schemaVersion": "1.0.0",
   "templateVersion": "1.0.0",
   "license": "CC-BY-4.0",
-  "updatedAt": "2026-10-29"
+  "updatedAt": "2026-11-22"
 }

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>آزمایشگاه جست‌وجو روی گرید</title>
+<style>
+:root{--bg:#eef1f7;--card:#fff;--ink:#1d2433;--mute:#667089;--line:#d9deea;--acc:#3b5bdb;--accink:#fff;
+--cell:#fbfcff;--grid:#e3e7f1;--wall:#2a3350;--mud:#d8b98a;--front:#a5c8ff;--exp:#d3c6ff;--path:#ffa41b;--start:#12a36a;--goal:#e5484d;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#10131b;--card:#1a1f2d;--ink:#e7eaf4;--mute:#9aa3bb;--line:#2b3247;--acc:#7e95ff;--accink:#10131b;
+--cell:#151925;--grid:#262c3e;--wall:#6f7ba3;--mud:#7d6338;--front:#2f5287;--exp:#4a3f88;--path:#ffb347;--start:#2fd08c;--goal:#ff6b70;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.7 "Vazirmatn",Tahoma,system-ui,sans-serif;padding:20px 14px 40px}
+.wrap{max-width:900px;margin:0 auto}
+h1{font-size:24px;margin:0 0 2px}
+.sub{color:var(--mute);margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.row+.row{margin-top:10px}
+.lab{color:var(--mute);font-size:13px}
+button,select{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:9px;padding:5px 12px;cursor:pointer}
+button:hover{border-color:var(--acc)}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.tool.on{background:var(--acc);color:var(--accink);border-color:var(--acc)}
+.go{background:var(--acc);color:var(--accink);border-color:var(--acc);font-weight:bold;padding:6px 22px}
+select:disabled{opacity:.45}
+#cv{display:block;margin:0 auto;border:1px solid var(--line);border-radius:8px;touch-action:none;cursor:crosshair;max-width:100%}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-top:12px}
+.stat{background:var(--bg);border-radius:10px;padding:8px 12px}
+.stat b{display:block;font-size:20px}
+.stat span{color:var(--mute);font-size:12.5px}
+#desc{margin:0;color:var(--mute)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--mute);margin-top:12px;justify-content:center}
+.legend i{display:inline-block;width:13px;height:13px;border-radius:4px;vertical-align:-2px;margin-inline-end:5px;border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:14px;text-align:center}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--mute);font-weight:normal}
+td:first-child,th:first-child{text-align:start}
+.ok{color:var(--start)}.bad{color:var(--goal)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>آزمایشگاه جست‌وجو روی گرید</h1>
+<p class="sub">شروع، هدف و مانع بگذارید، الگوریتم را انتخاب کنید و اجرای آن را گام‌به‌گام ببینید.</p>
+
+<div class="card">
+  <div class="row">
+    <span class="lab">ابزار:</span>
+    <button class="tool on" data-t="wall">مانع</button>
+    <button class="tool" data-t="mud">ناحیه کند (هزینه ۵)</button>
+    <button class="tool" data-t="start">شروع</button>
+    <button class="tool" data-t="goal">هدف</button>
+    <button class="tool" data-t="erase">پاک‌کن</button>
+  </div>
+  <div class="row">
+    <span class="lab">الگوریتم:</span>
+    <select id="algo">
+      <option value="bfs">BFS</option><option value="dfs">DFS</option><option value="iddfs">IDDFS</option>
+      <option value="ucs">UCS</option><option value="greedy">Greedy</option><option value="astar" selected>A*</option>
+    </select>
+    <span class="lab">هیوریستیک:</span>
+    <select id="heur"><option value="man">منهتن</option><option value="euc">اقلیدسی</option></select>
+    <span class="lab">سرعت:</span>
+    <input type="range" id="speed" min="1" max="200" value="30" aria-label="سرعت">
+  </div>
+  <div class="row">
+    <button class="go" id="go">شروع</button>
+    <button id="clrPath">پاک‌کردن مسیر</button>
+    <button id="clrAll">پاک‌کردن همه</button>
+    <button id="rand">مانع تصادفی</button>
+    <button id="cmp">مقایسه همه</button>
+  </div>
+</div>
+
+<div class="card">
+  <p id="desc"></p>
+  <div style="margin-top:12px"><canvas id="cv" aria-label="گرید جست‌وجو"></canvas></div>
+  <div class="legend">
+    <span><i style="background:var(--start)"></i>شروع</span><span><i style="background:var(--goal)"></i>هدف</span>
+    <span><i style="background:var(--wall)"></i>مانع</span><span><i style="background:var(--mud)"></i>ناحیه کند</span>
+    <span><i style="background:var(--front)"></i>در صف/پشته</span><span><i style="background:var(--exp)"></i>بسط‌یافته</span>
+    <span><i style="background:var(--path)"></i>مسیر</span>
+  </div>
+  <div class="stats">
+    <div class="stat"><b id="sState">آماده</b><span>وضعیت</span></div>
+    <div class="stat"><b id="sExp">۰</b><span>گره بسط‌یافته</span></div>
+    <div class="stat"><b id="sLen">—</b><span>طول مسیر (قدم)</span></div>
+    <div class="stat"><b id="sCost">—</b><span>هزینه مسیر</span></div>
+  </div>
+</div>
+
+<div class="card" id="cmpCard" hidden>
+  <table>
+    <thead><tr><th>الگوریتم</th><th>بسط</th><th>طول</th><th>هزینه</th><th>بهینه؟</th></tr></thead>
+    <tbody id="cmpBody"></tbody>
+  </table>
+</div>
+</div>
+
+<script>
+const R=16,C=26,N=R*C;
+const fa=n=>Number(n).toLocaleString('fa-IR');
+const idx=(r,c)=>r*C+c;
+const wall=new Uint8Array(N),mud=new Uint8Array(N),mark=new Uint8Array(N);
+let start=idx(8,4),goal=idx(8,21),tool='wall',painting=false;
+let steps=[],si=0,ec=0,path=[],shown=0,phase='idle',acc=0,raf=0,fin=null,cell=30;
+const cv=document.getElementById('cv'),cx=cv.getContext('2d');
+const $=id=>document.getElementById(id);
+const NAMES={bfs:'BFS',dfs:'DFS',iddfs:'IDDFS',ucs:'UCS',greedy:'Greedy',astar:'A*'};
+const DESC={
+ bfs:'BFS با صف FIFO لایه‌به‌لایه جلو می‌رود. کمترین تعداد قدم را می‌دهد، ولی هزینه‌ها را نادیده می‌گیرد.',
+ dfs:'DFS با پشته تا ته یک مسیر می‌رود. سریع است ولی مسیرش معمولاً بلند و غیربهینه است.',
+ iddfs:'IDDFS همان DFS با محدودیت عمق است که مرحله‌به‌مرحله بیشتر می‌شود (با هر مرحله نقشه پاک می‌شود). کمترین قدم را می‌دهد، با حافظه کم و بسط‌های تکراری.',
+ ucs:'UCS صف را بر اساس g (هزینه واقعی تا اینجا) مرتب می‌کند. با ناحیه‌های کند مسیر ارزان‌تر را پیدا می‌کند.',
+ greedy:'Greedy فقط بر اساس h مرتب می‌کند. هدفمند و سریع است ولی تضمین بهینگی ندارد.',
+ astar:'A* بر اساس f = g + h مرتب می‌کند. با h مجاز بهینه است و معمولاً از UCS گره کمتری بسط می‌دهد.'};
+
+const cost=i=>mud[i]?5:1;
+function nbrs(i){
+  const r=(i/C)|0,c=i%C,o=[];
+  if(r>0&&!wall[i-C])o.push(i-C);
+  if(c<C-1&&!wall[i+1])o.push(i+1);
+  if(r<R-1&&!wall[i+C])o.push(i+C);
+  if(c>0&&!wall[i-1])o.push(i-1);
+  return o;
+}
+function hfun(){
+  const e=$('heur').value==='euc',gr=(goal/C)|0,gc=goal%C;
+  return i=>{const dr=Math.abs(((i/C)|0)-gr),dc=Math.abs(i%C-gc);return e?Math.hypot(dr,dc):dr+dc};
+}
+function build(par,found){
+  if(!found)return [];
+  const p=[];for(let i=goal;i!==-1;i=par[i])p.push(i);
+  return p.reverse();
+}
+
+/* ---------- الگوریتم‌ها: خروجی {s: رویدادها, path} ---------- */
+function bfs(){
+  const s=[],par=new Int32Array(N).fill(-1),seen=new Uint8Array(N),q=[start];
+  seen[start]=1;s.push(['f',start]);let found=false;
+  for(let h=0;h<q.length;h++){
+    const u=q[h];s.push(['e',u]);
+    if(u===goal){found=true;break}
+    for(const v of nbrs(u))if(!seen[v]){seen[v]=1;par[v]=u;q.push(v);s.push(['f',v])}
+  }
+  return {s,path:build(par,found)};
+}
+function dfs(){
+  const s=[],par=new Int32Array(N).fill(-1),vis=new Uint8Array(N),st=[start];
+  s.push(['f',start]);let found=false;
+  while(st.length){
+    const u=st.pop();if(vis[u])continue;
+    vis[u]=1;s.push(['e',u]);
+    if(u===goal){found=true;break}
+    const ns=nbrs(u);
+    for(let k=ns.length-1;k>=0;k--){const v=ns[k];if(!vis[v]){par[v]=u;st.push(v);s.push(['f',v])}}
+  }
+  return {s,path:build(par,found)};
+}
+function iddfs(){
+  const b=bfs();if(!b.path.length)return {s:b.s,path:[]}; // هدف دست‌نیافتنی: از تکرار بی‌فایده مرحله‌ها صرف‌نظر می‌شود
+  const s=[];let par=new Int32Array(N).fill(-1);
+  for(let lim=0;lim<=N;lim++){
+    s.push(['r',lim]);
+    const best=new Int32Array(N).fill(1e9);par=new Int32Array(N).fill(-1);
+    let deeper=false,found=false;
+    const dls=(u,d)=>{
+      best[u]=d;s.push(['e',u]);
+      if(u===goal)return true;
+      for(const v of nbrs(u)){
+        if(d+1<best[v]){
+          if(d===lim){deeper=true;continue}
+          par[v]=u;s.push(['f',v]);
+          if(dls(v,d+1))return true;
+        }
+      }
+      return false;
+    };
+    found=dls(start,0);
+    if(found)return {s,path:build(par,true)};
+    if(!deeper)break;
+  }
+  return {s,path:[]};
+}
+function bestFirst(kind){
+  const s=[],h=hfun(),par=new Int32Array(N).fill(-1),g=new Float64Array(N).fill(Infinity);
+  const closed=new Uint8Array(N),seen=new Uint8Array(N);let open=[],k=0,found=false;
+  g[start]=0;seen[start]=1;open.push([kind==='ucs'?0:h(start),k++,start]);s.push(['f',start]);
+  while(open.length){
+    let b=0;
+    for(let j=1;j<open.length;j++)if(open[j][0]<open[b][0]||(open[j][0]===open[b][0]&&open[j][1]<open[b][1]))b=j;
+    const u=open.splice(b,1)[0][2];
+    if(closed[u])continue;
+    closed[u]=1;s.push(['e',u]);
+    if(u===goal){found=true;break}
+    for(const v of nbrs(u)){
+      const ng=g[u]+cost(v);
+      if(kind==='greedy'){
+        if(!seen[v]){seen[v]=1;g[v]=ng;par[v]=u;open.push([h(v),k++,v]);s.push(['f',v])}
+      }else if(ng<g[v]){
+        g[v]=ng;par[v]=u;open.push([ng+(kind==='astar'?h(v):0),k++,v]);s.push(['f',v]);
+      }
+    }
+  }
+  return {s,path:build(par,found)};
+}
+function runAlgo(a){
+  const r=a==='bfs'?bfs():a==='dfs'?dfs():a==='iddfs'?iddfs():bestFirst(a);
+  r.exp=r.s.reduce((n,x)=>n+(x[0]==='e'),0);
+  r.len=r.path.length?r.path.length-1:null;
+  r.cost=r.path.length?r.path.slice(1).reduce((n,i)=>n+cost(i),0):null;
+  return r;
+}
+
+/* ---------- رسم ---------- */
+function resize(){
+  cell=Math.max(12,Math.min(34,Math.floor((cv.parentElement.clientWidth-2)/C)));
+  const d=window.devicePixelRatio||1;
+  cv.width=C*cell*d;cv.height=R*cell*d;cv.style.width=C*cell+'px';cv.style.height=R*cell+'px';
+  cx.setTransform(d,0,0,d,0,0);draw();
+}
+function draw(){
+  const css=getComputedStyle(document.documentElement),v=n=>css.getPropertyValue(n).trim();
+  const onPath=new Set(path.slice(0,shown));
+  for(let i=0;i<N;i++){
+    const x=(i%C)*cell,y=((i/C)|0)*cell;
+    cx.fillStyle=wall[i]?v('--wall'):onPath.has(i)?v('--path'):mark[i]===2?v('--exp'):mark[i]===1?v('--front'):mud[i]?v('--mud'):v('--cell');
+    cx.fillRect(x,y,cell,cell);
+    if(mud[i]&&!wall[i]&&!onPath.has(i)&&mark[i]===0){cx.fillStyle=v('--mud');cx.fillRect(x,y,cell,cell)}
+    if(mud[i]&&!wall[i]&&(mark[i]||onPath.has(i))){cx.fillStyle=v('--mud');cx.fillRect(x+cell*.35,y+cell*.35,cell*.3,cell*.3)}
+    cx.strokeStyle=v('--grid');cx.lineWidth=1;cx.strokeRect(x+.5,y+.5,cell,cell);
+  }
+  for(const [i,col,t] of [[start,'--start','S'],[goal,'--goal','G']]){
+    const x=(i%C)*cell+cell/2,y=((i/C)|0)*cell+cell/2;
+    cx.fillStyle=v(col);cx.beginPath();cx.arc(x,y,cell*.4,0,7);cx.fill();
+    cx.fillStyle='#fff';cx.font='bold '+Math.round(cell*.45)+'px sans-serif';cx.textAlign='center';cx.textBaseline='middle';cx.fillText(t,x,y+1);
+  }
+}
+
+/* ---------- اجرای نمایشی ---------- */
+function setStats(state,exp,len,cst){
+  $('sState').textContent=state;$('sExp').textContent=fa(exp);
+  $('sLen').textContent=len==null?'—':fa(len);$('sCost').textContent=cst==null?'—':fa(cst);
+}
+function clearSearch(){
+  cancelAnimationFrame(raf);phase='idle';steps=[];si=0;ec=0;path=[];shown=0;mark.fill(0);
+  $('go').textContent='شروع';setStats('آماده',0,null,null);draw();
+}
+function begin(){
+  clearSearch();
+  const a=$('algo').value;fin=runAlgo(a);steps=fin.s;path=fin.path;
+  phase='search';$('go').textContent='توقف';setStats('در حال جست‌وجو…',0,null,null);
+  raf=requestAnimationFrame(frame);
+}
+function frame(){
+  if(phase==='search'){
+    acc+=$('speed').value/10;let n=Math.floor(acc);acc-=n;
+    while(n-->0&&si<steps.length){
+      const [t,i]=steps[si++];
+      if(t==='f'){if(mark[i]!==2)mark[i]=1}
+      else if(t==='e'){mark[i]=2;ec++}
+      else{mark.fill(0);$('sState').textContent='IDDFS · عمق '+fa(i)}
+    }
+    if($('algo').value!=='iddfs')$('sState').textContent='در حال جست‌وجو…';
+    $('sExp').textContent=fa(ec);
+    if(si>=steps.length)phase='path';
+  }else if(phase==='path'){
+    if(path.length&&shown<path.length)shown++;
+    else{
+      phase='idle';$('go').textContent='شروع';
+      setStats(path.length?'مسیر پیدا شد':'مسیری وجود ندارد',fin.exp,fin.len,fin.cost);
+      draw();return;
+    }
+  }
+  draw();raf=requestAnimationFrame(frame);
+}
+$('go').onclick=()=>{
+  if(phase==='idle')begin();
+  else{cancelAnimationFrame(raf);phase='idle';$('go').textContent='شروع';$('sState').textContent='متوقف شد'}
+};
+
+/* ---------- ویرایش گرید ---------- */
+function cellAt(e){
+  const r=cv.getBoundingClientRect(),c=Math.floor((e.clientX-r.left)/r.width*C),rr=Math.floor((e.clientY-r.top)/r.height*R);
+  return c<0||c>=C||rr<0||rr>=R?-1:idx(rr,c);
+}
+function paint(i){
+  if(i<0)return;
+  if(tool==='start'){if(i!==goal){wall[i]=0;start=i}}
+  else if(tool==='goal'){if(i!==start){wall[i]=0;goal=i}}
+  else if(i!==start&&i!==goal){
+    if(tool==='wall'){wall[i]=1;mud[i]=0}
+    else if(tool==='mud'){mud[i]=1;wall[i]=0}
+    else{wall[i]=0;mud[i]=0}
+  }
+}
+cv.addEventListener('pointerdown',e=>{
+  if(phase!=='idle')return;
+  clearSearch();painting=true;cv.setPointerCapture(e.pointerId);paint(cellAt(e));draw();
+});
+cv.addEventListener('pointermove',e=>{if(painting){paint(cellAt(e));draw()}});
+cv.addEventListener('pointerup',()=>painting=false);
+cv.addEventListener('pointercancel',()=>painting=false);
+document.querySelectorAll('.tool').forEach(b=>b.onclick=()=>{
+  tool=b.dataset.t;document.querySelectorAll('.tool').forEach(x=>x.classList.toggle('on',x===b));
+});
+$('clrPath').onclick=clearSearch;
+$('clrAll').onclick=()=>{wall.fill(0);mud.fill(0);start=idx(8,4);goal=idx(8,21);clearSearch();$('cmpCard').hidden=true};
+$('rand').onclick=()=>{
+  clearSearch();wall.fill(0);mud.fill(0);
+  for(let i=0;i<N;i++){if(i===start||i===goal)continue;const x=Math.random();if(x<.26)wall[i]=1;else if(x<.34)mud[i]=1}
+  draw();
+};
+function syncUI(){$('desc').textContent=DESC[$('algo').value];const a=$('algo').value;$('heur').disabled=!(a==='greedy'||a==='astar')}
+$('algo').onchange=()=>{clearSearch();syncUI()};
+$('heur').onchange=clearSearch;
+
+/* ---------- مقایسه همه ---------- */
+$('cmp').onclick=()=>{
+  clearSearch();
+  const res=Object.keys(NAMES).map(a=>[a,runAlgo(a)]);
+  const costs=res.filter(r=>r[1].cost!=null).map(r=>r[1].cost),min=Math.min(...costs);
+  $('cmpBody').innerHTML=res.map(([a,r])=>{
+    const f=r.cost!=null;
+    return `<tr><td>${NAMES[a]}</td><td>${fa(r.exp)}</td><td>${f?fa(r.len):'—'}</td><td>${f?fa(r.cost):'—'}</td>`+
+      `<td class="${f?(r.cost===min?'ok':'bad'):''}">${f?(r.cost===min?'بله':'خیر'):'مسیر ندارد'}</td></tr>`;
+  }).join('');
+  $('cmpCard').hidden=false;
+};
+
+window.addEventListener('resize',resize);
+syncUI();resize();
+</script>
+</body>
+</html>

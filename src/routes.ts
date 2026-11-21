@@ -1,7 +1,7 @@
 import { escape, markdown, renderCodeIndex, themeButton } from './render.ts';
 
 type CourseData = {
-  manifest: { title: string; description: string };
+  manifest: { title: string; description: string; labs?: { after: number; title: string; file: string }[] };
   lessons: { id: string; title: string; order: number; content: string; codes: { name: string; githubUrl: string; path?: string; type: string }[] }[];
   codes: { name: string; session?: number; githubUrl: string; path?: string; type: string; supplemental?: boolean }[];
 };
@@ -12,7 +12,7 @@ const badges = ['badge-green', 'badge-blue', 'badge-pink', 'badge-yellow', 'badg
 export function renderRoute(path: string, data: CourseData, base: string, offline = false) {
   const route = (value: string) => offline ? `#/${value}` : `${base}${value}`;
   const nav = `<header><a href="${route('')}"${path === '' ? ' aria-current="page"' : ''}>محتوا</a><a href="${route('code/')}">کدها</a>${themeButton}</header>`;
-  if (path === '') return `${nav}<section class="hero"><div class="hero-badge">🎓 دورهٔ آموزشی</div><h1>${escape(data.manifest.title)}</h1><p class="hero-desc">${escape(data.manifest.description)}</p><div class="meta-row"><div class="meta-pill">📚 تعداد جلسات: <span>${fa(String(data.lessons.length))}</span></div></div></section><h2 class="section-title">💬 جلسه‌ها</h2><ol class="session-list">${data.lessons.map((item, index) => `<li><a class="session-card" href="${route(`sessions/${item.id}/`)}"><span class="step-num ${badges[index % badges.length]}">${fa(String(item.order))}</span><span class="session-card__title">${escape(item.title)}</span></a></li>`).join('')}</ol>`;
+  if (path === '') return `${nav}<section class="hero"><div class="hero-badge">🎓 دورهٔ آموزشی</div><h1>${escape(data.manifest.title)}</h1><p class="hero-desc">${escape(data.manifest.description)}</p><div class="meta-row"><div class="meta-pill">📚 تعداد جلسات: <span>${fa(String(data.lessons.length))}</span></div></div></section><h2 class="section-title">💬 جلسه‌ها</h2><ol class="session-list">${data.lessons.flatMap((item, index) => [`<li><a class="session-card" href="${route(`sessions/${item.id}/`)}"><span class="step-num ${badges[index % badges.length]}">${fa(String(item.order))}</span><span class="session-card__title">${escape(item.title)}</span></a></li>`, ...(data.manifest.labs ?? []).filter((lab) => lab.after === item.order).map((lab) => `<li><a class="session-card session-card--lab" href="${offline ? escape(lab.file) : `${base}${escape(lab.file)}`}"><span class="step-num badge-yellow">🧪</span><span class="session-card__title">${escape(lab.title)}</span></a></li>`)]).join('')}</ol>`;
   if (path === 'code') return renderCodeIndex(data.codes, base, offline);
   const match = path.match(/^sessions\/([^/]+)$/);
   const lesson = match && data.lessons.find((item) => item.id === match[1]);

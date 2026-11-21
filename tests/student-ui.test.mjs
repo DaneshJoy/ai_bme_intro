@@ -200,6 +200,18 @@ test('offline routes use hash navigation and local code files', () => {
   assert.doesNotMatch(codePage, /github\.com/);
 });
 
+test('search lab appears after session 8 in the session list', async () => {
+  const lab = courseData.manifest.labs?.find((item) => item.after === 8);
+  assert.ok(lab, 'no lab registered after session 8');
+  assert.ok((await readFile(path.join(root, 'public', lab.file), 'utf8')).includes('آزمایشگاه'));
+  const home = renderRoute('', courseData, '/ai_bme_intro/');
+  assert.ok(home.includes(`href="/ai_bme_intro/${lab.file}"`), `lab link missing: ${home}`);
+  assert.ok(home.indexOf(lab.title) > home.indexOf('session-08-a-star'), 'lab must follow session 8');
+  const offlineHome = renderRoute('', courseData, './', true);
+  assert.ok(offlineHome.includes(`href="${lab.file}"`), `offline lab link missing: ${offlineHome}`);
+  assert.ok(!offlineHome.includes(`href="/ai_bme_intro/${lab.file}"`), 'offline lab link must be relative');
+});
+
 test('Pages routes retain pathname links', () => {
   const lesson = courseData.lessons[0];
   const home = renderRoute('', courseData, '/ai_bme_intro/');
