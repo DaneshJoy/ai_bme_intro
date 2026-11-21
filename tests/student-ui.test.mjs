@@ -203,7 +203,9 @@ test('offline routes use hash navigation and local code files', () => {
 test('search lab appears after session 8 in the session list', async () => {
   const lab = courseData.manifest.labs?.find((item) => item.after === 8);
   assert.ok(lab, 'no lab registered after session 8');
-  assert.ok((await readFile(path.join(root, 'public', lab.file), 'utf8')).includes('آزمایشگاه'));
+  const labPage = await readFile(path.join(root, 'public', lab.file), 'utf8');
+  assert.ok(labPage.includes('آزمایشگاه'));
+  assert.ok(labPage.includes('href="index.html"'), 'lab page needs a back link to the course');
   const home = renderRoute('', courseData, '/ai_bme_intro/');
   assert.ok(home.includes(`href="/ai_bme_intro/${lab.file}"`), `lab link missing: ${home}`);
   assert.ok(home.indexOf(lab.title) > home.indexOf('session-08-a-star'), 'lab must follow session 8');
