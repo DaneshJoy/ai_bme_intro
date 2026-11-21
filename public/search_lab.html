@@ -43,7 +43,7 @@ td:first-child,th:first-child{text-align:start}
 </head>
 <body>
 <div class="wrap">
-<a class="back" href="index.html">→ بازگشت به درس</a>
+<a class="back" href="./">→ بازگشت به درس</a>
 <h1>آزمایشگاه جست‌وجو روی گرید</h1>
 <p class="sub">شروع، هدف و مانع بگذارید، الگوریتم را انتخاب کنید و اجرای آن را گام‌به‌گام ببینید.</p>
 
@@ -334,6 +334,7 @@ $('cmp').onclick=()=>{
 
 window.addEventListener('resize',resize);
 syncUI();resize();
+if(location.protocol==='file:')document.querySelector('.back').href='index.html';
 </script>
 </body>
 </html>

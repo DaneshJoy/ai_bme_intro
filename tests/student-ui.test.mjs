@@ -205,7 +205,8 @@ test('search lab appears after session 8 in the session list', async () => {
   assert.ok(lab, 'no lab registered after session 8');
   const labPage = await readFile(path.join(root, 'public', lab.file), 'utf8');
   assert.ok(labPage.includes('آزمایشگاه'));
-  assert.ok(labPage.includes('href="index.html"'), 'lab page needs a back link to the course');
+  assert.ok(labPage.includes('class="back" href="./"'), 'lab back link must target the course root');
+  assert.ok(labPage.includes("location.protocol==='file:'"), 'lab back link needs an offline fallback');
   const home = renderRoute('', courseData, '/ai_bme_intro/');
   assert.ok(home.includes(`href="/ai_bme_intro/${lab.file}"`), `lab link missing: ${home}`);
   assert.ok(home.indexOf(lab.title) > home.indexOf('session-08-a-star'), 'lab must follow session 8');
