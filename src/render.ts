@@ -126,7 +126,9 @@ export const markdown = (source: string) => {
             continue;
           }
           if (itemTag !== tag) break;
-          items.push(`<li>${inline(match[3])}`);
+          // Self-check checklists are static (no persistence); the label names the disabled control.
+          const task = match[3].match(/^\[([ xX])\]\s+(.*)$/);
+          items.push(task ? `<li class="task-list-item"><label><input type="checkbox" disabled${task[1].toLowerCase() === 'x' ? ' checked' : ''}> ${inline(task[2])}</label>` : `<li>${inline(match[3])}`);
           i++;
           if (i < lines.length) {
             const nested = lines[i].match(/^(\s*)([-*+] |\d+\. )/);

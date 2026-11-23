@@ -143,6 +143,8 @@ article h3 { margin-block-start: 1.5em; }
 .content th { background: var(--surface); color: var(--muted); font-weight: 600; }
 .content tr:nth-child(even) td { background: color-mix(in srgb, var(--text) 3%, transparent); }
 .content li { padding-block: .25rem; }
+.content li.task-list-item { list-style: none; }
+.content .task-list-item input { margin: 0; margin-inline-end: .4rem; }
 .content details { margin-block: 1rem; }
 .content details > summary { cursor: pointer; }
 .math-display { direction: ltr; }

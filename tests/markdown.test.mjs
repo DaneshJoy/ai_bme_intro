@@ -43,3 +43,13 @@ test('table cells pass only the authored LTR span and br allowlist; other HTML s
 test('details/summary blocks render as real elements and keep inner markdown', () => {
   assert.equal(markdown('<details>\n<summary>کلید پاسخ</summary>\n\n1. جواب `S`\n\n</details>'), '<details class="answer"><summary>کلید پاسخ</summary><ol><li>جواب <code dir="ltr">S</code></li></ol></details>');
 });
+
+test('task list items render as static checkboxes and plain lists are unchanged', () => {
+  assert.equal(markdown('- [ ] الف\n- [x] ب'), '<ul><li class="task-list-item"><label><input type="checkbox" disabled> الف</label></li><li class="task-list-item"><label><input type="checkbox" disabled checked> ب</label></li></ul>');
+  assert.equal(markdown('- [X] upper'), '<ul><li class="task-list-item"><label><input type="checkbox" disabled checked> upper</label></li></ul>');
+  assert.equal(markdown('- [ ] parent\n  - child'), '<ul><li class="task-list-item"><label><input type="checkbox" disabled> parent</label><ul><li>child</li></ul></li></ul>');
+  assert.equal(markdown('- [ ] **strong** `code` [link](https://example.test/)'), '<ul><li class="task-list-item"><label><input type="checkbox" disabled> <strong>strong</strong> <code dir="ltr">code</code> <a href="https://example.test/" rel="noopener noreferrer">link</a></label></li></ul>');
+  assert.equal(markdown('- [فهرست](https://example.test/)'), '<ul><li><a href="https://example.test/" rel="noopener noreferrer">فهرست</a></li></ul>');
+  assert.ok(markdown('- [ ] <script>alert(1)</script>').includes('&lt;script&gt;alert(1)&lt;/script&gt;'));
+  assert.equal(markdown('- plain'), '<ul><li>plain</li></ul>');
+});
